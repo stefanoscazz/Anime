@@ -22,7 +22,7 @@ export const HomePage = () => {
       return <CircularProgress />;
     }
     if (statusTopAnime === "failed") {
-      return <h1>Connessione Assente</h1>;
+      return <h1> No connection, please connect and try again</h1>;
     }
     if (statusTopAnime === "success") {
       return listTopAnime.map((el) => <CardAnime data={el} key={el.mal_id} />);
