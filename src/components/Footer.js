@@ -7,8 +7,8 @@ export const Footer = () => {
     <FooterContainer>
       App Realizzata da Stefano Scazzi
       <SocialBox>
-        <GitHubIcon />
-        <LinkedInIcon />
+        <GitHubIcon style={{ fontSize: "30px" }} />
+        <LinkedInIcon style={{ fontSize: "40px" }} />
       </SocialBox>
     </FooterContainer>
   );
@@ -19,11 +19,15 @@ const FooterContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  color: rgb(51, 51, 51);
   height: 15vh;
-  background-color: rgb(49, 0, 82);
+  background-color: #ac9266;
   color: white;
+  font-weight: 900;
 `;
 const SocialBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin: 10px;
 `;
+//

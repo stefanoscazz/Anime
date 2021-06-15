@@ -2,11 +2,35 @@ import React from "react";
 import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
 import { Link } from "react-router-dom";
+import HomeIcon from "@material-ui/icons/Home";
+import { useState } from "react";
+import { searchAction } from "../slice/searchSlice";
+import { useDispatch } from "react-redux";
 
 export const Navbar = () => {
+  const dispatch = useDispatch();
+  const [profile, setProfile] = useState(true);
+  const [inputValue, setInputValue] = useState("");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (inputValue) {
+      dispatch(searchAction(inputValue));
+    }
+  };
+
+  const handleOnChange = (e) => {
+    setInputValue(e.target.value);
+  };
   return (
     <NavbarContainer>
       <Logo>anime list</Logo>
+
+      {profile ? (
+        <img
+          src="https://lh3.googleusercontent.com/ogw/ADea4I7RxZpz6dEnuOQOFQLxNZhENdOtUnrP8YIBcSKU=s32-c-mo"
+          alt=""
+        />
+      ) : null}
       <div
         style={{
           display: "flex",
@@ -15,14 +39,24 @@ export const Navbar = () => {
           justifyContent: "center",
         }}
       >
-        <form action="">
-          <input placeholder="search an anime" type="text" />
+        <form onSubmit={handleSubmit}>
+          <input
+            value={inputValue}
+            onChange={handleOnChange}
+            placeholder="search an anime"
+            type="text"
+          />
           <ButtonSearch type="submit">
             <SearchIcon />
           </ButtonSearch>
         </form>
         <Link to="/login">
           <ButtonLogin>Login</ButtonLogin>
+        </Link>
+        <Link to="/">
+          <ButtonHome>
+            <HomeIcon />
+          </ButtonHome>
         </Link>
       </div>
     </NavbarContainer>
@@ -33,6 +67,7 @@ const NavbarContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
+  flex-wrap: wrap;
   padding: 10px;
   height: 15vh;
   flex-wrap: wrap;
@@ -44,6 +79,7 @@ const NavbarContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
     input {
       width: 170px;
       line-height: normal;
@@ -72,7 +108,7 @@ const ButtonLogin = styled.button`
   border-radius: 20px;
   outline: none;
   cursor: pointer;
-  background-color: rgb(0, 111, 230);
+  background-color: #183c7a;
   color: white;
   padding: 0px 14px;
   border: none;
@@ -88,5 +124,20 @@ const ButtonSearch = styled.button`
   &:hover {
     background-color: #929292;
     color: white;
+  }
+`;
+const ButtonHome = styled.button`
+  margin: 10px;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 20px;
+  &:hover {
+    background-color: #929292;
+    color: white;
+  }
+  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+    margin: 0;
   }
 `;

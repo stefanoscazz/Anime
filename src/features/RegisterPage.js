@@ -82,7 +82,7 @@ const ButtonRegister = styled.button`
   border-radius: 20px;
   outline: none;
   cursor: pointer;
-  background-color: rgb(0, 111, 230);
+  background-color:  #183c7a;
   color: white;
   padding: 0px 18px;
   border: none;
