@@ -6,26 +6,58 @@ import WhatshotTwoToneIcon from "@material-ui/icons/WhatshotTwoTone";
 import { useEffect } from "react";
 import { topAnimeAction } from "../slice/topAnimeSlice";
 import { useDispatch, useSelector } from "react-redux";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 export const HomePage = () => {
   const dispatch = useDispatch();
   const listTopAnime = useSelector((state) => state.top.list);
   const statusTopAnime = useSelector((state) => state.top.status);
   const listSearchAnime = useSelector((state) => state.search.list);
+  const statusSearchAnime = useSelector((state) => state.search.status);
   useEffect(() => {
     dispatch(topAnimeAction());
   }, []);
+  const displayTopAnime = () => {
+    if (statusTopAnime === "loading") {
+      return <CircularProgress />;
+    }
+    if (statusTopAnime === "failed") {
+      return <h1>Connessione Assente</h1>;
+    }
+    if (statusTopAnime === "success") {
+      return listTopAnime.map((el) => <CardAnime data={el} key={el.mal_id} />);
+    }
+  };
+
+  const displaySearchAnime = () => {
+    if (statusSearchAnime === "loading") {
+      return <CircularProgress />;
+    }
+    if (statusSearchAnime === "failed") {
+      return <h1>Connessione Assente</h1>;
+    }
+    if (statusSearchAnime === "success") {
+      return listSearchAnime.map((el) => (
+        <CardAnime data={el} key={el.mal_id} />
+      ));
+    }
+  };
+
   return (
     <HomeContainer>
-      <Top>
-        <h3>
-          TOP{" "}
-          <WhatshotTwoToneIcon style={{ color: "#cc0000", fontSize: "30px" }} />
-        </h3>
-      </Top>
+      {!statusSearchAnime ? (
+        <Top>
+          <h3>
+            TOP{" "}
+            <WhatshotTwoToneIcon
+              style={{ color: "#cc0000", fontSize: "30px" }}
+            />
+          </h3>
+        </Top>
+      ) : null}
+
       <CardSection>
-        {statusTopAnime === "success"
-          ? listTopAnime.map((el) => <CardAnime data={el} key={el.mal_id} />)
-          : null}
+        {statusSearchAnime ? displaySearchAnime() : displayTopAnime()}
       </CardSection>
     </HomeContainer>
   );

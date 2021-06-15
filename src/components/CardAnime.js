@@ -16,7 +16,9 @@ export const CardAnime = ({ data }) => {
   return (
     <CardAnimeContainer>
       <img src={data.image_url} alt="" />
-      <p>{data.title}</p>
+      <p>
+        {data.title.length > 30 ? data.title.slice(0, 30) + "..." : data.title}
+      </p>
       <AddIconSection>
         {addButton ? (
           <Fab onClick={handleClickDelete} size="small" color="secondary">
@@ -50,6 +52,7 @@ const CardAnimeContainer = styled.div`
   }
   p {
     width: 180px;
+    height: 40px;
   }
 `;
 

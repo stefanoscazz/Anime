@@ -1,28 +1,55 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
+import { auth, provider } from "../firebase";
+import { setActiveUser } from "../slice/userSlice";
 
 export const LoginPage = () => {
-  return (
-    <Login>
-      <Title>Login</Title>
-      <form action="">
-        <input type="email" placeholder="email" />
-        <input type="password" placeholder="password" />
-        <ButtonLogin type="submit"> Log in</ButtonLogin>
-        <ButtonGoogle>
-          Continue with Google
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-            alt=""
-          />
-        </ButtonGoogle>
-        <Link to="/register">
-          <p>Create an account</p>
-        </Link>
-      </form>
-    </Login>
-  );
+  const userId = useSelector((state) => state.user.id);
+  const dispatch = useDispatch();
+  const handleSignInGoogle = () => {
+    auth
+      .signInWithPopup(provider)
+      .then((result) => {
+        dispatch(
+          setActiveUser({
+            id: result.user.uid,
+            userName: result.user.displayName,
+            photoURL: result.user.photoURL,
+            email: result.user.email,
+          })
+        );
+      })
+      .catch((err) => alert(err.message));
+  };
+  const displayLogin = () => {
+    if (!userId) {
+      return (
+        <Login>
+          <Title>Login</Title>
+          <form action="" onSubmit={(e) => e.preventDefault()}>
+            <input type="email" placeholder="email" />
+            <input type="password" placeholder="password" />
+            <ButtonLogin type="submit"> Log in</ButtonLogin>
+            <ButtonGoogle onClick={handleSignInGoogle}>
+              Continue with Google
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                alt=""
+              />
+            </ButtonGoogle>
+            <Link to="/register">
+              <p>Create an account</p>
+            </Link>
+          </form>
+        </Login>
+      );
+    } else {
+      return <Redirect to="/" />;
+    }
+  };
+  return <div>{displayLogin()}</div>;
 };
 
 const Login = styled.div`

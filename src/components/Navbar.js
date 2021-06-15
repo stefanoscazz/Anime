@@ -1,16 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import { useState } from "react";
 import { searchAction } from "../slice/searchSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../firebase";
+import { setUserLogOutState } from "../slice/userSlice";
+
 
 export const Navbar = () => {
   const dispatch = useDispatch();
   const [profile, setProfile] = useState(true);
   const [inputValue, setInputValue] = useState("");
+  const id = useSelector(state => state.user.id);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue) {
@@ -21,6 +25,12 @@ export const Navbar = () => {
   const handleOnChange = (e) => {
     setInputValue(e.target.value);
   };
+  const handleLogOut = () => {
+    auth
+      .signOut()
+      .then(dispatch(setUserLogOutState()))
+      .catch((err) => alert(err.message));
+  }
   return (
     <NavbarContainer>
       <Logo>anime list</Logo>
@@ -50,9 +60,10 @@ export const Navbar = () => {
             <SearchIcon />
           </ButtonSearch>
         </form>
-        <Link to="/login">
-          <ButtonLogin>Login</ButtonLogin>
-        </Link>
+        {!id ?
+          (<Link to="/login">
+            <ButtonLogin>Login</ButtonLogin>
+          </Link>) : (<ButtonLogout onClick={handleLogOut}>Logout</ButtonLogout>)}
         <Link to="/">
           <ButtonHome>
             <HomeIcon />
@@ -102,7 +113,7 @@ const Logo = styled.h1`
 `;
 const ButtonLogin = styled.button`
   font-weight: 700;
-  width: 70px;
+  width: 75px;
   font-size: 14px;
   height: 30px;
   border-radius: 20px;
@@ -112,6 +123,20 @@ const ButtonLogin = styled.button`
   color: white;
   padding: 0px 14px;
   border: none;
+`;
+const ButtonLogout = styled.button`
+font-weight: 700;
+  width: 75px;
+  font-size: 14px;
+  height: 30px;
+  border-radius: 20px;
+  outline: none;
+  cursor: pointer;
+  background-color: #183c7a;
+  color: white;
+  padding: 0px 14px;
+  border: none;
+
 `;
 
 const ButtonSearch = styled.button`
