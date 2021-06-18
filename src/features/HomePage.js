@@ -34,7 +34,7 @@ export const HomePage = () => {
       return <CircularProgress />;
     }
     if (statusSearchAnime === "failed") {
-      return <h1>Connessione Assente</h1>;
+      return displayTopAnime();
     }
     if (statusSearchAnime === "success") {
       return listSearchAnime.map((el) => (
@@ -45,7 +45,7 @@ export const HomePage = () => {
 
   return (
     <HomeContainer>
-      {!statusSearchAnime ? (
+      {(!statusSearchAnime || statusSearchAnime === "failed") ? (
         <Top>
           <h3>
             TOP{" "}

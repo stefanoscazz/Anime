@@ -8,13 +8,29 @@ import { searchAction } from "../slice/searchSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../firebase";
 import { setUserLogOutState } from "../slice/userSlice";
-
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import { Button } from "@material-ui/core";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 export const Navbar = () => {
+  //Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  console.log("da Navbar", auth.currentUser);
+  //Redux State
   const dispatch = useDispatch();
   const [profile, setProfile] = useState(true);
   const [inputValue, setInputValue] = useState("");
-  const id = useSelector(state => state.user.id);
+  const id = useSelector((state) => state.user.id);
+  const isLog = auth.currentUser;
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue) {
@@ -23,24 +39,19 @@ export const Navbar = () => {
   };
 
   const handleOnChange = (e) => {
+    dispatch(searchAction(e.target.value));
     setInputValue(e.target.value);
   };
   const handleLogOut = () => {
+    sessionStorage.clear();
     auth
       .signOut()
       .then(dispatch(setUserLogOutState()))
       .catch((err) => alert(err.message));
-  }
+  };
   return (
     <NavbarContainer>
       <Logo>anime list</Logo>
-
-      {profile ? (
-        <img
-          src="https://lh3.googleusercontent.com/ogw/ADea4I7RxZpz6dEnuOQOFQLxNZhENdOtUnrP8YIBcSKU=s32-c-mo"
-          alt=""
-        />
-      ) : null}
       <div
         style={{
           display: "flex",
@@ -60,15 +71,39 @@ export const Navbar = () => {
             <SearchIcon />
           </ButtonSearch>
         </form>
-        {!id ?
-          (<Link to="/login">
-            <ButtonLogin>Login</ButtonLogin>
-          </Link>) : (<ButtonLogout onClick={handleLogOut}>Logout</ButtonLogout>)}
-        <Link to="/">
-          <ButtonHome>
-            <HomeIcon />
-          </ButtonHome>
-        </Link>
+        <Button
+          aria-controls="simple-menu"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          <MoreVertIcon />
+        </Button>
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link to="/">
+              <Button>
+                <HomeIcon />
+              </Button>
+            </Link>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            {" "}
+            {!isLog ? (
+              <Link style={{ textDecoration: "none" }} to="/login">
+                <Button>Login</Button>
+              </Link>
+            ) : (
+              <Button onClick={handleLogOut}>Logout</Button>
+            )}
+          </MenuItem>
+        </Menu>
       </div>
     </NavbarContainer>
   );
@@ -80,7 +115,7 @@ const NavbarContainer = styled.div`
   justify-content: space-around;
   flex-wrap: wrap;
   padding: 10px;
-  height: 15vh;
+  height: 100px;
   flex-wrap: wrap;
   @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
     justify-content: center;
@@ -111,33 +146,6 @@ const Logo = styled.h1`
   letter-spacing: 7px;
   color: rgb(51, 51, 51);
 `;
-const ButtonLogin = styled.button`
-  font-weight: 700;
-  width: 75px;
-  font-size: 14px;
-  height: 30px;
-  border-radius: 20px;
-  outline: none;
-  cursor: pointer;
-  background-color: #183c7a;
-  color: white;
-  padding: 0px 14px;
-  border: none;
-`;
-const ButtonLogout = styled.button`
-font-weight: 700;
-  width: 75px;
-  font-size: 14px;
-  height: 30px;
-  border-radius: 20px;
-  outline: none;
-  cursor: pointer;
-  background-color: #183c7a;
-  color: white;
-  padding: 0px 14px;
-  border: none;
-
-`;
 
 const ButtonSearch = styled.button`
   margin: 10px;
@@ -149,20 +157,5 @@ const ButtonSearch = styled.button`
   &:hover {
     background-color: #929292;
     color: white;
-  }
-`;
-const ButtonHome = styled.button`
-  margin: 10px;
-  border: none;
-  background-color: white;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 20px;
-  &:hover {
-    background-color: #929292;
-    color: white;
-  }
-  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-    margin: 0;
   }
 `;

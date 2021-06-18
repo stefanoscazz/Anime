@@ -1,36 +1,81 @@
 import React from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { auth, provider } from "../firebase";
 import { setActiveUser } from "../slice/userSlice";
-
+import firebase from "firebase";
 export const LoginPage = () => {
   const userId = useSelector((state) => state.user.id);
   const dispatch = useDispatch();
   const handleSignInGoogle = () => {
-    auth
-      .signInWithPopup(provider)
-      .then((result) => {
-        dispatch(
-          setActiveUser({
-            id: result.user.uid,
-            userName: result.user.displayName,
-            photoURL: result.user.photoURL,
-            email: result.user.email,
+    firebase
+      .auth()
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .then(() => {
+        auth
+          .signInWithPopup(provider)
+          .then((result) => {
+            dispatch(
+              setActiveUser({
+                id: result.user.uid,
+                userName: result.user.displayName,
+                photoURL: result.user.photoURL,
+                email: result.user.email,
+              })
+            );
           })
-        );
-      })
-      .catch((err) => alert(err.message));
+          .catch((err) => alert(err.message));
+      });
+  };
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const onCangePass = (e) => {
+    setPassword(e.target.value);
+  };
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    firebase
+      .auth()
+      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+      .then(() => {
+        auth
+          .signInWithEmailAndPassword(email, password)
+          .then((result) => {
+            dispatch(
+              setActiveUser({
+                id: result.user.uid,
+                userName: result.user.displayName,
+                photoURL: result.user.photoURL,
+                email: result.user.email,
+              })
+            );
+          })
+          .catch((error) => console.log(error));
+      });
   };
   const displayLogin = () => {
     if (!userId) {
       return (
         <Login>
           <Title>Login</Title>
-          <form action="" onSubmit={(e) => e.preventDefault()}>
-            <input type="email" placeholder="email" />
-            <input type="password" placeholder="password" />
+          <form action="" onSubmit={handleSubmit}>
+            <input
+              value={email}
+              onChange={onChangeEmail}
+              type="email"
+              placeholder="email"
+            />
+            <input
+              value={password}
+              onChange={onCangePass}
+              type="password"
+              placeholder="password"
+            />
             <ButtonLogin type="submit"> Log in</ButtonLogin>
             <ButtonGoogle onClick={handleSignInGoogle}>
               Continue with Google
@@ -53,7 +98,7 @@ export const LoginPage = () => {
 };
 
 const Login = styled.div`
-  height: 70vh;
+  height: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -70,6 +115,7 @@ const Login = styled.div`
     outline: none;
   }
   form {
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -87,6 +133,7 @@ const Title = styled.h1`
   color: rgb(51, 51, 51);
 `;
 const ButtonGoogle = styled.button`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-evenly;

@@ -1,32 +1,73 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
+import { auth } from "../firebase";
 
 export const RegisterPage = () => {
-  return (
-    <Register>
-      <Title>Register</Title>
-      <form action="">
-        <input type="email" placeholder="email" />
-        <input type="password" placeholder="password" />
-        <ButtonRegister type="submit"> Register</ButtonRegister>
-        <ButtonGoogle>
-          Continue with Google
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-            alt=""
-          />
-        </ButtonGoogle>
-        <Link to="/login">
-          <p>Already have an account?</p>
-        </Link>
-      </form>
-    </Register>
-  );
+  const userId = useSelector((state) => state.user.id);
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [success, setSuccess] = useState(false);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("eamil da submit :", email);
+    console.log("pass da submit :", password);
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCredetial) => setSuccess(true))
+      .catch((error) => console.log(error.message));
+  };
+  const onCangePass = (e) => {
+    setPassword(e.target.value);
+  };
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value);
+  };
+  const displayRegister = () => {
+    if (!success) {
+      return (
+        <Register>
+          <Title>Register</Title>
+          <form action="" onSubmit={handleSubmit}>
+            <input
+              required
+              value={email}
+              onChange={onChangeEmail}
+              type="email"
+              placeholder="email"
+            />
+            <input
+              required
+              value={password}
+              onChange={onCangePass}
+              type="password"
+              placeholder="password"
+            />
+            <ButtonRegister type="submit"> Register</ButtonRegister>
+            <ButtonGoogle>
+              Continue with Google
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                alt=""
+              />
+            </ButtonGoogle>
+            <Link to="/login">
+              <p>Already have an account?</p>
+            </Link>
+          </form>
+        </Register>
+      );
+    } else {
+      return <Redirect to="/login" />;
+    }
+  };
+  return <div>{displayRegister()}</div>;
 };
 
 const Register = styled.div`
-  height: 70vh;
+  height: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -43,6 +84,7 @@ const Register = styled.div`
     outline: none;
   }
   form {
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -82,7 +124,7 @@ const ButtonRegister = styled.button`
   border-radius: 20px;
   outline: none;
   cursor: pointer;
-  background-color:  #183c7a;
+  background-color: #183c7a;
   color: white;
   padding: 0px 18px;
   border: none;
