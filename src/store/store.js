@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
+import descriptionSlice from "../slice/descriptionSlice";
 import searchSlice from "../slice/searchSlice";
 import topAnimeSlice from "../slice/topAnimeSlice";
 import userSlice from "../slice/userSlice";
-
 
 
 export default configureStore({
@@ -10,5 +10,7 @@ export default configureStore({
         top: topAnimeSlice,
         search: searchSlice,
         user: userSlice,
+        description: descriptionSlice,
+
     },
 })

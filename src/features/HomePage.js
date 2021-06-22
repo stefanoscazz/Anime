@@ -7,6 +7,9 @@ import { useEffect } from "react";
 import { topAnimeAction } from "../slice/topAnimeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { v4 as uuidv4 } from "uuid";
+import { Backdrop } from "@material-ui/core";
+
 
 export const HomePage = () => {
   const dispatch = useDispatch();
@@ -14,6 +17,9 @@ export const HomePage = () => {
   const statusTopAnime = useSelector((state) => state.top.status);
   const listSearchAnime = useSelector((state) => state.search.list);
   const statusSearchAnime = useSelector((state) => state.search.status);
+
+  //ACTION TO DISPLAY TOP ANIME
+
   useEffect(() => {
     dispatch(topAnimeAction());
   }, []);
@@ -25,9 +31,21 @@ export const HomePage = () => {
       return <h1> No connection, please connect and try again</h1>;
     }
     if (statusTopAnime === "success") {
-      return listTopAnime.map((el) => <CardAnime data={el} key={el.mal_id} />);
+      return listTopAnime.map((el) => {
+        return (
+          <Link
+            key={uuidv4()}
+            style={{ textDecoration: "none", color: "black" }}
+            to={{ pathname: "/description", state: el.mal_id }}
+          >
+            <CardAnime data={el} key={el.mal_id} />
+          </Link>
+        );
+      });
     }
   };
+
+  //ACTION TO DISPLAY SEARCH ANIME
 
   const displaySearchAnime = () => {
     if (statusSearchAnime === "loading") {
@@ -37,15 +55,23 @@ export const HomePage = () => {
       return displayTopAnime();
     }
     if (statusSearchAnime === "success") {
-      return listSearchAnime.map((el) => (
-        <CardAnime data={el} key={el.mal_id} />
-      ));
+      return listSearchAnime.map((el) => {
+        return (
+          <Link
+            key={uuidv4()}
+            style={{ textDecoration: "none", color: "black" }}
+            to={{ pathname: "/description", state: el.mal_id }}
+          >
+            <CardAnime data={el} key={el.mal_id} />
+          </Link>
+        );
+      });
     }
   };
 
   return (
     <HomeContainer>
-      {(!statusSearchAnime || statusSearchAnime === "failed") ? (
+      {!statusSearchAnime || statusSearchAnime === "failed" ? (
         <Top>
           <h3>
             TOP{" "}

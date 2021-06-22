@@ -1,51 +1,108 @@
 import React from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { auth } from "../firebase";
+import { FormHelperText, TextField } from "@material-ui/core";
+import { setUserLogOutState } from "../slice/userSlice";
 
 export const RegisterPage = () => {
+  const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.id);
   const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
+  const [errorInput, setError] = useState(false);
+  const [messageError, setMessageError] = useState("");
+  const strongRegex = new RegExp(
+    "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("eamil da submit :", email);
-    console.log("pass da submit :", password);
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((userCredetial) => setSuccess(true))
-      .catch((error) => console.log(error.message));
+    if (strongRegex.test(password) && password === confirmPass) {
+      auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredetial) => {
+          setSuccess(true)
+        }).then(() => {
+          auth
+            .signOut()
+            .then(dispatch(setUserLogOutState()))
+            .catch((err) => alert(err.message));
+        })
+        .catch((error) => {
+          setError(true);
+          setMessageError(error.message);
+        });
+    } else {
+      validationError();
+    }
   };
-  const onCangePass = (e) => {
-    setPassword(e.target.value);
+
+  // VALIDATION ERROR HELPERTEXT
+  const validationError = () => {
+    setError(true);
+    if (!strongRegex.test(password)) {
+      setMessageError(
+        "minimum 8 digit atleast one uppercase letter  and one non alphanumeric symbol ('&!?@')"
+      );
+      if (password !== confirmPass) {
+        setMessageError("passwords not match");
+      }
+    }
   };
-  const onChangeEmail = (e) => {
-    setEmail(e.target.value);
-  };
+  //  HOOK STATE INPUT VALUE SU ONVCHANGE
+
+  const onChangePass = (e) => setPassword(e.target.value);
+  const onChangeEmail = (e) => setEmail(e.target.value);
+  const handleConfirmPass = (e) => setConfirmPass(e.target.value);
+
   const displayRegister = () => {
     if (!success) {
       return (
         <Register>
           <Title>Register</Title>
           <form action="" onSubmit={handleSubmit}>
-            <input
-              required
+            <TextField
+              size="small"
               value={email}
               onChange={onChangeEmail}
               type="email"
-              placeholder="email"
+              id="email"
+              label="email"
+              variant="outlined"
             />
-            <input
-              required
+            <TextField
+              style={{ margin: "10px" }}
+              size="small"
               value={password}
-              onChange={onCangePass}
+              onChange={onChangePass}
               type="password"
-              placeholder="password"
+              id="password"
+              label="password"
+              variant="outlined"
             />
-            <ButtonRegister type="submit"> Register</ButtonRegister>
+            <TextField
+              onChange={handleConfirmPass}
+              value={confirmPass}
+              size="small"
+              type="password"
+              id="confirm-password"
+              label="Confirm Password"
+              variant="outlined"
+            />
+            {errorInput ? (
+              <FormHelperText error id="confirm-password">
+                {messageError}
+              </FormHelperText>
+            ) : null}
+
+            <ButtonRegister size="small" type="submit">
+              Register
+            </ButtonRegister>
             <ButtonGoogle>
               Continue with Google
               <img
@@ -72,23 +129,12 @@ const Register = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  input {
-    width: 280px;
-    line-height: normal;
-    min-height: 48px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    border-radius: 16px;
-    color: #111;
-    padding: 8px 16px;
-    outline: none;
-  }
+
   form {
-    height: 200px;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    height: 300px;
+    height: 360px;
     flex-direction: column;
   }
   img {
@@ -117,6 +163,7 @@ const ButtonGoogle = styled.button`
   padding: 0px 18px;
 `;
 const ButtonRegister = styled.button`
+  margin-top: 10px;
   font-weight: 700;
   width: 250px;
   font-size: 14px;

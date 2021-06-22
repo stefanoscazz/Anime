@@ -3,11 +3,14 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
+import { FormHelperText, TextField } from "@material-ui/core";
 import { auth, provider } from "../firebase";
 import { setActiveUser } from "../slice/userSlice";
 import firebase from "firebase";
 export const LoginPage = () => {
   const userId = useSelector((state) => state.user.id);
+  const [errorInput, setError] = useState(false);
+  const [messageError, setMessageError] = useState("");
   const dispatch = useDispatch();
   const handleSignInGoogle = () => {
     firebase
@@ -26,12 +29,15 @@ export const LoginPage = () => {
               })
             );
           })
-          .catch((err) => alert(err.message));
+          .catch((err) => {
+            setError(true);
+            setMessageError(err.message);
+          });
       });
   };
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const onCangePass = (e) => {
+  const onChangePass = (e) => {
     setPassword(e.target.value);
   };
   const onChangeEmail = (e) => {
@@ -55,7 +61,10 @@ export const LoginPage = () => {
               })
             );
           })
-          .catch((error) => console.log(error));
+          .catch((err) => {
+            setError(true);
+            setMessageError(err.message);
+          });
       });
   };
   const displayLogin = () => {
@@ -64,18 +73,30 @@ export const LoginPage = () => {
         <Login>
           <Title>Login</Title>
           <form action="" onSubmit={handleSubmit}>
-            <input
+            <TextField
+              size="small"
               value={email}
               onChange={onChangeEmail}
               type="email"
-              placeholder="email"
+              id="email"
+              label="email"
+              variant="outlined"
             />
-            <input
+            <TextField
+              style={{ margin: "10px" }}
+              size="small"
               value={password}
-              onChange={onCangePass}
+              onChange={onChangePass}
               type="password"
-              placeholder="password"
+              id="password"
+              label="password"
+              variant="outlined"
             />
+            {errorInput ? (
+              <FormHelperText error id="password">
+                {messageError}
+              </FormHelperText>
+            ) : null}
             <ButtonLogin type="submit"> Log in</ButtonLogin>
             <ButtonGoogle onClick={handleSignInGoogle}>
               Continue with Google
@@ -103,17 +124,7 @@ const Login = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  input {
-    width: 280px;
-    line-height: normal;
-    min-height: 48px;
-    border: 1px solid #ddd;
-    font-size: 16px;
-    border-radius: 16px;
-    color: #111;
-    padding: 8px 16px;
-    outline: none;
-  }
+
   form {
     height: 200px;
     display: flex;

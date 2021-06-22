@@ -19,40 +19,39 @@ export const CardAnime = ({ data }) => {
       <p>
         {data.title.length > 30 ? data.title.slice(0, 30) + "..." : data.title}
       </p>
-      <AddIconSection>
-        {addButton ? (
-          <Fab onClick={handleClickDelete} size="small" color="secondary">
-            <HighlightOffIcon />
-          </Fab>
-        ) : (
-          <Fab onClick={handleClickAdd} size="small" color="primary">
-            <AddIcon />
-          </Fab>
-        )}
-      </AddIconSection>
-      <ButtonDescription>Learn more</ButtonDescription>
     </CardAnimeContainer>
   );
 };
 const CardAnimeContainer = styled.div`
-  box-shadow: rgba(49, 49, 49, 0.4) 5px 5px, rgba(49, 49, 49, 0.3) 10px 10px,
-    rgba(49, 49, 49, 0.2) 15px 15px, rgba(48, 48, 48, 0.1) 20px 20px,
-    rgba(49, 49, 49, 0.05) 25px 25px;
-  border-radius: 30px;
+  
   width: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: 20px;
   height: 370px;
+
   img {
+    border-radius: 10px;
     width: 180px;
     height: 220px;
   }
   p {
-    width: 180px;
-    height: 40px;
+    height: 100px;
+    width: 140px;
+  }
+  @media all and (max-width: 480px) {
+    width: 160px;
+    height: 220px;
+    margin: 20px;
+    img {
+      max-width: 140px;
+      height: 180px;
+    }
+    p {
+      width: 100px;
+      height: 40px;
+    }
   }
 `;
 

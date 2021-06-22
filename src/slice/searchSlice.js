@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from "axios";
 
 export const searchAction = createAsyncThunk("searchSlice/searchAction", async (inputValue) => {
-    console.log('dall action: ', inputValue);
+
     const url = `https://api.jikan.moe/v3/search/anime?q=${inputValue}&page=1`
     try {
         const data = await axios.get(url)

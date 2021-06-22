@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useLocation } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import { useState } from "react";
 import { searchAction } from "../slice/searchSlice";
@@ -14,9 +14,34 @@ import { Button } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 export const Navbar = () => {
+  let location = useLocation();
+
+  const diplaySearchBar = () => {
+    if (
+      location.pathname === "/login" ||
+      location.pathname === "/register" ||
+      location.pathname === "/description"
+    ) {
+      return null;
+    } else {
+      return (
+        <form onSubmit={handleSubmit}>
+          <input
+            value={inputValue}
+            onChange={handleOnChange}
+            placeholder="search an anime"
+            type="text"
+          />
+          <ButtonSearch type="submit">
+            <SearchIcon />
+          </ButtonSearch>
+        </form>
+      );
+    }
+  };
+
   //Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -24,7 +49,7 @@ export const Navbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log("da Navbar", auth.currentUser);
+
   //Redux State
   const dispatch = useDispatch();
   const [profile, setProfile] = useState(true);
@@ -60,17 +85,8 @@ export const Navbar = () => {
           justifyContent: "center",
         }}
       >
-        <form onSubmit={handleSubmit}>
-          <input
-            value={inputValue}
-            onChange={handleOnChange}
-            placeholder="search an anime"
-            type="text"
-          />
-          <ButtonSearch type="submit">
-            <SearchIcon />
-          </ButtonSearch>
-        </form>
+        {diplaySearchBar()}
+
         <Button
           aria-controls="simple-menu"
           aria-haspopup="true"
@@ -150,12 +166,8 @@ const Logo = styled.h1`
 const ButtonSearch = styled.button`
   margin: 10px;
   border: none;
-  background-color: white;
+  background-color: transparent;
   cursor: pointer;
   padding: 5px;
   border-radius: 20px;
-  &:hover {
-    background-color: #929292;
-    color: white;
-  }
 `;

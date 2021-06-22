@@ -8,27 +8,30 @@ import { Footer } from "./components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { setActiveUser } from "./slice/userSlice";
 import { auth } from "./firebase";
+import { DescriptionPage } from "./features/DescriptionPage";
+import { useEffect } from "react";
 
 function App() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  console.log("da app", auth.currentUser);
-
-  auth.onAuthStateChanged(function (user) {
-    if (user) {
-      // User is signed in.
-      dispatch(
-        setActiveUser({
-          id: auth.currentUser.uid,
-          userName: auth.currentUser.displayName,
-          photoURL: auth.currentUser.photoURL,
-          email: auth.currentUser.email,
-        })
-      );
-    } else {
-      // No user is signed in.
-    }
-  });
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in.
+        dispatch(
+          setActiveUser({
+            id: auth.currentUser.uid,
+            userName: auth.currentUser.displayName,
+            photoURL: auth.currentUser.photoURL,
+            email: auth.currentUser.email,
+          })
+        );
+      } else {
+        // No user is signed in.
+        console.log("no sign in");
+      }
+    });
+  }, []);
 
   return (
     <Router>
@@ -38,6 +41,7 @@ function App() {
           <Route exact path="/" component={HomePage} />
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/register" component={RegisterPage} />
+          <Route exact path="/description" component={DescriptionPage} />
         </Switch>
         <Footer />
       </div>
