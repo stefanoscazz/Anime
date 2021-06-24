@@ -30,8 +30,7 @@ export const LoginPage = () => {
             );
           })
           .catch((err) => {
-            setError(true);
-            setMessageError(err.message);
+            console.log(err)
           });
       });
   };
@@ -98,7 +97,7 @@ export const LoginPage = () => {
               </FormHelperText>
             ) : null}
             <ButtonLogin type="submit"> Log in</ButtonLogin>
-            <ButtonGoogle onClick={handleSignInGoogle}>
+            <ButtonGoogle type="button" onClick={handleSignInGoogle}>
               Continue with Google
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
@@ -119,8 +118,8 @@ export const LoginPage = () => {
 };
 
 const Login = styled.div`
-  height: 400px;
-  display: flex;
+height: 400px;
+   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;

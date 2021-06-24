@@ -8,7 +8,6 @@ import { topAnimeAction } from "../slice/topAnimeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { v4 as uuidv4 } from "uuid";
-import { Backdrop } from "@material-ui/core";
 
 
 export const HomePage = () => {
@@ -36,7 +35,7 @@ export const HomePage = () => {
           <Link
             key={uuidv4()}
             style={{ textDecoration: "none", color: "black" }}
-            to={{ pathname: "/description", state: el.mal_id }}
+            to={{ pathname: "/description", state: el.mal_id, }}
           >
             <CardAnime data={el} key={el.mal_id} />
           </Link>

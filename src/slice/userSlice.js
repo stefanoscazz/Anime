@@ -8,7 +8,8 @@ const userSlice = createSlice({
         id: null,
         userName: null,
         email: null,
-        photoURL: null
+        photoURL: null,
+        favorites: []
     },
     reducers: {
         setActiveUser: (state, action) => {
@@ -24,9 +25,13 @@ const userSlice = createSlice({
             state.userName = null;
             state.photoURL = null;
             state.email = null;
+            state.favorites.length = 0;
+        },
+        setFavoritesList: (state, action) => {
+            state.favorites = action.payload;
         }
     }
 })
 
-export const { setActiveUser, setUserLogOutState } = userSlice.actions;
+export const { setActiveUser, setUserLogOutState, setFavoritesList } = userSlice.actions;
 export default userSlice.reducer;

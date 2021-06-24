@@ -31,7 +31,10 @@ export const RegisterPage = () => {
           auth
             .signOut()
             .then(dispatch(setUserLogOutState()))
-            .catch((err) => alert(err.message));
+            .catch((err) => {
+              console.log(err)
+              setMessageError(err.message);
+            });
         })
         .catch((error) => {
           setError(true);
@@ -45,13 +48,13 @@ export const RegisterPage = () => {
   // VALIDATION ERROR HELPERTEXT
   const validationError = () => {
     setError(true);
+    if (password !== confirmPass) {
+      setMessageError("passwords not match");
+    }
     if (!strongRegex.test(password)) {
       setMessageError(
         "minimum 8 digit atleast one uppercase letter  and one non alphanumeric symbol ('&!?@')"
       );
-      if (password !== confirmPass) {
-        setMessageError("passwords not match");
-      }
     }
   };
   //  HOOK STATE INPUT VALUE SU ONVCHANGE
@@ -59,7 +62,6 @@ export const RegisterPage = () => {
   const onChangePass = (e) => setPassword(e.target.value);
   const onChangeEmail = (e) => setEmail(e.target.value);
   const handleConfirmPass = (e) => setConfirmPass(e.target.value);
-
   const displayRegister = () => {
     if (!success) {
       return (

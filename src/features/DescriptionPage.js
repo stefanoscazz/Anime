@@ -9,45 +9,23 @@ export const DescriptionPage = ({ location }) => {
   const dispatch = useDispatch();
   const descriptionState = useSelector((state) => state.description);
   const id_user = useSelector((state) => state.user.id);
+  const favorites = useSelector((state) => state.user.favorites);
   const [animeList, setAnimeList] = useState(false);
+  const [message, setMessage] = useState(false);
   const id_anime = location.state;
-
-  useEffect(() => {
-    dispatch(descriptionAction(id_anime));
-  }, []);
-
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      db.collection("user")
-        .doc(user.uid)
-        .collection("preferiti")
-        .where("title", "==", title)
-        .onSnapshot((querySnapshot) => {
-          if (querySnapshot.empty) {
-            setAnimeList(false);
-          } else {
-            setAnimeList(true);
-          }
-        });
-      // ...
-    } else {
-      // User is signed out
-      // ...
-      console.log("utente non connesso");
-    }
-  });
-
   const {
+    title,
     duration,
     image_url,
     trailer_url,
-    title,
     status_anime,
     synopsis,
     episodes,
   } = descriptionState;
+  useEffect(() => {
+    dispatch(descriptionAction(id_anime));
+    favoritesList();
+  }, [favorites, title]);
 
   const handleRemove = () => {
     setAnimeList(false);
@@ -74,6 +52,18 @@ export const DescriptionPage = ({ location }) => {
       });
   };
 
+  const favoritesList = () => {
+    const currentFavorites = favorites.filter((el) => el.title === title);
+    if (currentFavorites.length > 0) {
+      if (currentFavorites && currentFavorites[0].title === title) {
+        setAnimeList(true);
+        console.log("presente");
+      }
+    } else {
+      setAnimeList(false);
+      console.log("non presente");
+    }
+  };
   return (
     <div>
       <FirstSection>
@@ -84,7 +74,9 @@ export const DescriptionPage = ({ location }) => {
           ) : (
             <ButtonAddList onClick={handleAdd}>Add to List</ButtonAddList>
           )}
+          <div>{message ? <p>Login to add a list</p> : null}</div>
         </ImgContainer>
+
         <DescriptionSection>
           <h1>{title}</h1>
           <p>{synopsis}</p>

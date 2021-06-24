@@ -24,7 +24,7 @@ const FooterContainer = styled.div`
   color: white;
   font-weight: 900;
   margin-top: 80px;
-`;
+  `;
 const SocialBox = styled.div`
   display: flex;
   align-items: center;
