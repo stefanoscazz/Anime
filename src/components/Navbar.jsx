@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
-import { Link, Redirect, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import { useState } from "react";
 import { searchAction } from "../slice/searchSlice";
@@ -12,15 +12,33 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Button } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import { addFavoritesAction, removeList } from "../slice/favoritesSlice";
 
 export const Navbar = () => {
   let location = useLocation();
 
+  //Menu
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  //Redux State
+  const dispatch = useDispatch();
+  const [profile, setProfile] = useState(true);
+  const [inputValue, setInputValue] = useState("");
+  const id = useSelector((state) => state.user.id);
+  const isLog = auth.currentUser;
   const diplaySearchBar = () => {
     if (
       location.pathname === "/login" ||
       location.pathname === "/register" ||
-      location.pathname === "/description"
+      location.pathname === "/description" ||
+      location.pathname === "/favorites"
     ) {
       return null;
     } else {
@@ -39,23 +57,6 @@ export const Navbar = () => {
       );
     }
   };
-
-  //Menu
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  //Redux State
-  const dispatch = useDispatch();
-  const [profile, setProfile] = useState(true);
-  const [inputValue, setInputValue] = useState("");
-  const id = useSelector((state) => state.user.id);
-  const isLog = auth.currentUser;
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue) {
@@ -64,18 +65,20 @@ export const Navbar = () => {
   };
 
   const handleOnChange = (e) => {
-    dispatch(searchAction(e.target.value));
     setInputValue(e.target.value);
   };
   const handleLogOut = () => {
-    sessionStorage.clear();
     auth
       .signOut()
-      .then(dispatch(setUserLogOutState()))
+      .then(() => {
+        dispatch(setUserLogOutState());
+        dispatch(removeList());
+      })
       .catch((err) => alert(err.message));
   };
   return (
     <NavbarContainer>
+      <StyledButton />
       <Logo>anime list</Logo>
       <div
         style={{
@@ -101,22 +104,26 @@ export const Navbar = () => {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Link style={{ textDecoration: "none" }} to="/favorites">
+              <StyledButton>Favorites</StyledButton>
+            </Link>
+          </MenuItem>
           <MenuItem onClick={handleClose}>
             <Link to="/">
-              <Button>
+              <StyledButton>
                 <HomeIcon />
-              </Button>
+              </StyledButton>
             </Link>
           </MenuItem>
           <MenuItem onClick={handleClose}>
             {" "}
             {!isLog ? (
               <Link style={{ textDecoration: "none" }} to="/login">
-                <Button>Login</Button>
+                <StyledButton>Login</StyledButton>
               </Link>
             ) : (
-              <Button onClick={handleLogOut}>Logout</Button>
+              <StyledButton onClick={handleLogOut}>Logout</StyledButton>
             )}
           </MenuItem>
         </Menu>
@@ -160,7 +167,6 @@ const Logo = styled.h1`
   font-style: italic;
   font-family: "Courier New";
   letter-spacing: 7px;
-  color: rgb(51, 51, 51);
 `;
 
 const ButtonSearch = styled.button`
@@ -170,4 +176,9 @@ const ButtonSearch = styled.button`
   cursor: pointer;
   padding: 5px;
   border-radius: 20px;
+`;
+const StyledButton = styled(Button)`
+  &:hover {
+    background-color: transparent !important;
+  }
 `;

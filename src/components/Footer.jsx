@@ -20,11 +20,11 @@ const FooterContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   height: 100px;
-  background-color: #ac9266;
+  background-color: #2b2d42;
   color: white;
   font-weight: 900;
   margin-top: 80px;
-  `;
+`;
 const SocialBox = styled.div`
   display: flex;
   align-items: center;

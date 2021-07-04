@@ -4,70 +4,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import styled from "styled-components";
 import { FormHelperText, TextField } from "@material-ui/core";
-import { auth, provider } from "../firebase";
-import { setActiveUser } from "../slice/userSlice";
-import firebase from "firebase";
+import {
+  loginGoogleAction,
+  loginWithEmailPasswordAction,
+} from "../slice/userSlice";
+
 export const LoginPage = () => {
-  const userId = useSelector((state) => state.user.id);
-  const [errorInput, setError] = useState(false);
-  const [messageError, setMessageError] = useState("");
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const handleSignInGoogle = () => {
-    firebase
-      .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .then(() => {
-        auth
-          .signInWithPopup(provider)
-          .then((result) => {
-            dispatch(
-              setActiveUser({
-                id: result.user.uid,
-                userName: result.user.displayName,
-                photoURL: result.user.photoURL,
-                email: result.user.email,
-              })
-            );
-          })
-          .catch((err) => {
-            console.log(err)
-          });
-      });
-  };
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+
   const onChangePass = (e) => {
     setPassword(e.target.value);
   };
   const onChangeEmail = (e) => {
     setEmail(e.target.value);
   };
+
+  const handleSignInGoogle = () => {
+    dispatch(loginGoogleAction());
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    firebase
-      .auth()
-      .setPersistence(firebase.auth.Auth.Persistence.SESSION)
-      .then(() => {
-        auth
-          .signInWithEmailAndPassword(email, password)
-          .then((result) => {
-            dispatch(
-              setActiveUser({
-                id: result.user.uid,
-                userName: result.user.displayName,
-                photoURL: result.user.photoURL,
-                email: result.user.email,
-              })
-            );
-          })
-          .catch((err) => {
-            setError(true);
-            setMessageError(err.message);
-          });
-      });
+    dispatch(
+      loginWithEmailPasswordAction({
+        email: email,
+        password: password,
+      })
+    );
   };
   const displayLogin = () => {
-    if (!userId) {
+    if (!user.id) {
       return (
         <Login>
           <Title>Login</Title>
@@ -91,9 +60,9 @@ export const LoginPage = () => {
               label="password"
               variant="outlined"
             />
-            {errorInput ? (
+            {user.errorMessage ? (
               <FormHelperText error id="password">
-                {messageError}
+                {user.errorMessage}
               </FormHelperText>
             ) : null}
             <ButtonLogin type="submit"> Log in</ButtonLogin>
@@ -118,8 +87,8 @@ export const LoginPage = () => {
 };
 
 const Login = styled.div`
-height: 400px;
-   display: flex;
+  height: 400px;
+  display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
