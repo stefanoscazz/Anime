@@ -6,6 +6,7 @@ export const descriptionAction = createAsyncThunk("descriptionSlice/descriptionA
     const url = `https://api.jikan.moe/v3/anime/${id}`
     try {
         const data = await axios.get(url)
+        console.log(data)
         return data.data;
     }
     catch (error) {
@@ -23,7 +24,11 @@ const descriptionSlice = createSlice({
         title: null,
         status_anime: null,
         synopsis: null,
-        episodes: null
+        episodes: null,
+        title_english: null,
+        title_japanese: null,
+        source: null,
+        score: null
     },
     extraReducers: {
         [descriptionAction.pending]: (state, action) => {
@@ -38,12 +43,20 @@ const descriptionSlice = createSlice({
             state.status_anime = payload.status;
             state.synopsis = payload.synopsis;
             state.episodes = payload.episodes;
+            state.title_english = payload.title_english;
+            state.title_japanese = payload.title_japanese;
+            state.source = payload.source;
+            state.score = payload.score;
 
         },
         [descriptionAction.rejected]: (state) => {
             state.status = "failed"
         }
+
     }
 
 })
+
+
+
 export default descriptionSlice.reducer

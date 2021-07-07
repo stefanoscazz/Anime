@@ -7,17 +7,19 @@ import db, { auth } from "../firebase.js";
 import { addFavoritesAction } from "../slice/favoritesSlice";
 import { isEmpty } from "lodash";
 import { CircularProgress } from "@material-ui/core";
+import { charactersAction } from "../slice/charactersSlice";
 
 export const DescriptionPage = ({ location }) => {
   const dispatch = useDispatch();
   const descriptionState = useSelector((state) => state.description);
+  const characters = useSelector((state) => state.characters);
   const id_user = useSelector((state) => state.user.id);
   const favorites = useSelector((state) => state.favorites);
   const [message, setMessage] = useState(false);
   const id_anime = location.pathname.slice(13);
+  console.log(location);
   const [displayButton, setdisplayButton] = useState(false);
   const [disabledButton, setdisabledButton] = useState(false);
-
   const {
     title,
     duration,
@@ -27,9 +29,15 @@ export const DescriptionPage = ({ location }) => {
     synopsis,
     episodes,
     status,
+    title_english,
+    title_japanese,
+    source,
+    score,
   } = descriptionState;
+  console.log(trailer_url);
   useEffect(() => {
     dispatch(descriptionAction(id_anime));
+    dispatch(charactersAction(id_anime));
   }, []);
   useEffect(() => {
     checkCurrentAnime();
@@ -39,7 +47,7 @@ export const DescriptionPage = ({ location }) => {
     if (status === "success") {
       return (
         <>
-          <FirstSection>
+          <MainSection>
             <ImgContainer>
               <img src={image_url} alt="" />
               {displayButton ? (
@@ -56,12 +64,59 @@ export const DescriptionPage = ({ location }) => {
               <h1>{title}</h1>
               <p>{synopsis}</p>
             </DescriptionSection>
-          </FirstSection>
+          </MainSection>
+
+          <InfoSection>
+            <Sidebar>
+              <p>
+                Episodes: <span>{episodes}</span>
+              </p>
+              <p>
+                Duration: <span>{duration}</span>
+              </p>
+              <p>
+                Status Anime:<span>{status_anime}</span>{" "}
+              </p>
+              <p>
+                Title English: <span>{title_english}</span>
+              </p>
+              <p>
+                Title Japanese: <span>{title_japanese}</span>
+              </p>
+              <p>
+                Source: <span>{source}</span>
+              </p>
+              <p>
+                Score: <span>{score}</span>
+              </p>
+            </Sidebar>
+            <LeftSection>
+              <h2>Main Characters</h2>
+              <Characters>
+                {!isEmpty(characters.list) &&
+                  characters.list.map((el) => {
+                    return (
+                      <CharacterBox key={el.mal_id}>
+                        <img src={el.image_url} alt="" />
+                        <p>{el.name}</p>
+                      </CharacterBox>
+                    );
+                  })}
+              </Characters>
+              <h2>Trailer</h2>
+              <iframe width="350" height="250" src={trailer_url}></iframe>
+              <Trailer></Trailer>
+            </LeftSection>
+          </InfoSection>
         </>
       );
     }
     if (status === "loading") {
-      return <CircularProgress />;
+      return (
+        <div>
+          <CircularProgress />
+        </div>
+      );
     }
     if (status === "failed") {
       return <h1>Errore</h1>;
@@ -81,7 +136,6 @@ export const DescriptionPage = ({ location }) => {
       setdisabledButton(true);
     }
   };
-  console.log(disabledButton);
   const handleRemove = () => {
     db.collection("user")
       .doc(id_user)
@@ -111,10 +165,11 @@ const ImgContainer = styled.div`
     border-radius: 10px;
   }
 `;
-const FirstSection = styled.div`
+const MainSection = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 50px;
 `;
 const DescriptionSection = styled.div`
   margin-left: 20px;
@@ -148,3 +203,48 @@ const ButtonRemoveList = styled.button`
   cursor: pointer;
   margin-top: 10px;
 `;
+const InfoSection = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+const Sidebar = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  p,
+  span {
+    width: 200px;
+    margin: 10px;
+    letter-spacing: 2px;
+    color: rgb(51, 51, 51);
+  }
+  span {
+    font-weight: bold;
+  }
+`;
+const LeftSection = styled.div`
+  flex-grow: 3;
+
+  img {
+    width: 100px;
+    height: 160px;
+    margin: 10px;
+  }
+`;
+const Characters = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+const CharacterBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  p {
+    width: 100px;
+    height: 100px;
+  }
+`;
+
+const Trailer = styled.div``;

@@ -13,7 +13,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Button } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { addFavoritesAction, removeList } from "../slice/favoritesSlice";
-
 export const Navbar = () => {
   let location = useLocation();
 
@@ -33,6 +32,7 @@ export const Navbar = () => {
   const [inputValue, setInputValue] = useState("");
   const id = useSelector((state) => state.user.id);
   const isLog = auth.currentUser;
+  console.log(location);
   const diplaySearchBar = () => {
     if (
       location.pathname === "/login" ||
@@ -78,8 +78,9 @@ export const Navbar = () => {
   };
   return (
     <NavbarContainer>
-      <StyledButton />
-      <Logo>anime list</Logo>
+      <Logo>
+        <p>Anime List</p>
+      </Logo>
       <div
         style={{
           display: "flex",
@@ -137,7 +138,6 @@ const NavbarContainer = styled.div`
   align-items: center;
   justify-content: space-around;
   flex-wrap: wrap;
-  padding: 10px;
   height: 100px;
   flex-wrap: wrap;
   @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
@@ -164,9 +164,10 @@ const NavbarContainer = styled.div`
 `;
 
 const Logo = styled.h1`
-  font-style: italic;
-  font-family: "Courier New";
-  letter-spacing: 7px;
+  img {
+    height: 100px;
+    width: 300px;
+  }
 `;
 
 const ButtonSearch = styled.button`

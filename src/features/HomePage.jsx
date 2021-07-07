@@ -60,7 +60,7 @@ export const HomePage = () => {
             style={{ textDecoration: "none", color: "black" }}
             to={{ pathname: `/description/${el.mal_id}` }}
           >
-            <CardAnime data={el} key={el.mal_id} />
+            <CardAnime key={el.mal_id} data={el}  />
           </Link>
         );
       });

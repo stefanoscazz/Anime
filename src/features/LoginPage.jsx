@@ -2,14 +2,54 @@ import React from "react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import styled from "styled-components";
-import { FormHelperText, TextField } from "@material-ui/core";
+import {
+  createMuiTheme,
+  FormHelperText,
+  MuiThemeProvider,
+  TextField,
+} from "@material-ui/core";
 import {
   loginGoogleAction,
   loginWithEmailPasswordAction,
 } from "../slice/userSlice";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+// import Link  from '@material-ui/core/Link';
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  container: {
+    marginBottom: "50px",
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
 
 export const LoginPage = () => {
+  const classes = useStyles();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
@@ -38,46 +78,76 @@ export const LoginPage = () => {
   const displayLogin = () => {
     if (!user.id) {
       return (
-        <Login>
-          <Title>Login</Title>
-          <form action="" onSubmit={handleSubmit}>
-            <TextField
-              size="small"
-              value={email}
-              onChange={onChangeEmail}
-              type="email"
-              id="email"
-              label="email"
-              variant="outlined"
-            />
-            <TextField
-              style={{ margin: "10px" }}
-              size="small"
-              value={password}
-              onChange={onChangePass}
-              type="password"
-              id="password"
-              label="password"
-              variant="outlined"
-            />
-            {user.errorMessage ? (
-              <FormHelperText error id="password">
-                {user.errorMessage}
-              </FormHelperText>
-            ) : null}
-            <ButtonLogin type="submit"> Log in</ButtonLogin>
-            <ButtonGoogle type="button" onClick={handleSignInGoogle}>
-              Continue with Google
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-                alt=""
+        <Container className={classes.container} component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={classes.form} onSubmit={handleSubmit} noValidate>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={onChangeEmail}
               />
-            </ButtonGoogle>
-            <Link to="/register">
-              <p>Create an account</p>
-            </Link>
-          </form>
-        </Login>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                value={password}
+                autoComplete="current-password"
+                onChange={onChangePass}
+              />
+              {user.errorMessage ? (
+                <FormHelperText error id="password">
+                  {user.errorMessage}
+                </FormHelperText>
+              ) : null}
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+              </Button>
+              <Button
+                onClick={handleSignInGoogle}
+                fullWidth
+                variant="contained"
+                color="secondary"
+                className={classes.submit}
+              >
+                Login with google
+              </Button>
+              <Grid container>
+                <Grid item>
+                  <Link to="/register" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </div>
+        </Container>
       );
     } else {
       return <Redirect to="/" />;
@@ -85,58 +155,3 @@ export const LoginPage = () => {
   };
   return <div>{displayLogin()}</div>;
 };
-
-const Login = styled.div`
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  form {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    height: 300px;
-    flex-direction: column;
-  }
-  img {
-    width: 20px;
-    height: 20px;
-  }
-`;
-const Title = styled.h1`
-  margin-bottom: 50px;
-  font-size: 35px;
-  color: rgb(51, 51, 51);
-`;
-const ButtonGoogle = styled.button`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-evenly;
-  font-weight: 700;
-  width: 250px;
-  border: 2px solid #ddd;
-  font-size: 14px;
-  height: 40px;
-  border-radius: 20px;
-  cursor: pointer;
-  background-color: white;
-  color: #3c4043;
-  padding: 0px 18px;
-`;
-const ButtonLogin = styled.button`
-  font-weight: 700;
-  width: 250px;
-  font-size: 14px;
-  height: 40px;
-  border-radius: 20px;
-  outline: none;
-  cursor: pointer;
-  background-color: #183c7a;
-  color: white;
-  padding: 0px 18px;
-  border: none;
-`;

@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import charactersSlice from "../slice/charactersSlice";
 import descriptionSlice from "../slice/descriptionSlice";
 import favoritesSlice from "../slice/favoritesSlice";
 import searchSlice from "../slice/searchSlice";
@@ -13,6 +14,7 @@ export default configureStore({
         user: userSlice,
         description: descriptionSlice,
         favorites: favoritesSlice,
+        characters: charactersSlice
 
     },
 })

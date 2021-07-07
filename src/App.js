@@ -12,10 +12,18 @@ import { DescriptionPage } from "./features/DescriptionPage";
 import { useEffect } from "react";
 import { FavoritesPage } from "./features/FavoritesPage";
 import { addFavoritesAction } from "./slice/favoritesSlice";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+
+const theme = createMuiTheme({
+  palette: {
+    background: {
+      default: "white",
+      paper: "white"
+    }
+  }
+})
 
 function App() {
-
-
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -45,19 +53,21 @@ function App() {
   });
 
   return (
-    <Router>
-      <div className="App" >
-        <Navbar />
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/login" component={LoginPage} />
-          <Route exact path="/register" component={RegisterPage} />
-          <Route exact path="/description/:id" component={DescriptionPage} />
-          <Route exact path="/favorites" component={FavoritesPage} />
-        </Switch>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <div className="App" >
+          <Navbar />
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/login" component={LoginPage} />
+            <Route exact path="/register" component={RegisterPage} />
+            <Route exact path="/description/:id" component={DescriptionPage} />
+            <Route exact path="/favorites" component={FavoritesPage} />
+          </Switch>
+        </div>
         <Footer />
-      </div>
-    </Router>
+      </Router>
+    </ThemeProvider>
   );
 }
 
