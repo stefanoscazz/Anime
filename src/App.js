@@ -12,9 +12,9 @@ import { DescriptionPage } from "./features/DescriptionPage";
 import { useEffect } from "react";
 import { FavoritesPage } from "./features/FavoritesPage";
 import { addFavoritesAction } from "./slice/favoritesSlice";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { createTheme, ThemeProvider } from "@material-ui/core";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     background: {
       default: "white",

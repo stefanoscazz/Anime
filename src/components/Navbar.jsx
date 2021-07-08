@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import styled from "styled-components";
 import SearchIcon from "@material-ui/icons/Search";
 import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
@@ -10,11 +9,109 @@ import { auth } from "../firebase";
 import { setUserLogOutState } from "../slice/userSlice";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { Button } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { addFavoritesAction, removeList } from "../slice/favoritesSlice";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
+import InputBase from "@material-ui/core/InputBase";
+import { alpha, makeStyles, withStyles } from "@material-ui/core/styles";
+import MenuIcon from "@material-ui/icons/Menu";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import StarIcon from "@material-ui/icons/Star";
+import LockIcon from "@material-ui/icons/Lock";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "center",
+    }}
+    transformOrigin={{
+      vertical: "top",
+      horizontal: "center",
+    }}
+    {...props}
+  />
+));
+
+const StyledMenuItem = withStyles((theme) => ({
+  root: {
+    "&:focus": {
+      backgroundColor: theme.palette.primary.main,
+      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
+      letterSpacing: "3px",
+    },
+  },
+  search: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      marginLeft: theme.spacing(1),
+      width: "auto",
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  inputRoot: {
+    color: "inherit",
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "12ch",
+      "&:focus": {
+        width: "20ch",
+      },
+    },
+  },
+}));
+
 export const Navbar = () => {
   let location = useLocation();
+  const classes = useStyles();
 
   //Menu
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -37,22 +134,25 @@ export const Navbar = () => {
     if (
       location.pathname === "/login" ||
       location.pathname === "/register" ||
-      location.pathname === "/description" ||
+      location.pathname.includes("/description") ||
       location.pathname === "/favorites"
     ) {
       return null;
     } else {
       return (
-        <form onSubmit={handleSubmit}>
-          <input
-            value={inputValue}
-            onChange={handleOnChange}
-            placeholder="search an anime"
-            type="text"
-          />
-          <ButtonSearch type="submit">
+        <form onSubmit={handleSubmit} className={classes.search}>
+          <div className={classes.searchIcon}>
             <SearchIcon />
-          </ButtonSearch>
+          </div>
+          <InputBase
+            onChange={handleOnChange}
+            placeholder="Search…"
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ "aria-label": "search" }}
+          />
         </form>
       );
     }
@@ -77,109 +177,83 @@ export const Navbar = () => {
       .catch((err) => alert(err.message));
   };
   return (
-    <NavbarContainer>
-      <Logo>
-        <p>Anime List</p>
-      </Logo>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        {diplaySearchBar()}
-
-        <Button
-          aria-controls="simple-menu"
-          aria-haspopup="true"
-          onClick={handleClick}
-        >
-          <MoreVertIcon />
-        </Button>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose}>
-            <Link style={{ textDecoration: "none" }} to="/favorites">
-              <StyledButton>Favorites</StyledButton>
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            aria-controls="customized-menu"
+            aria-haspopup="true"
+            variant="contained"
+            color="primary"
+            onClick={handleClick}
+          >
+            <MenuIcon style={{ color: "white" }} />
+          </IconButton>
+          <StyledMenu
+            id="customized-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <Link
+              to="/"
+              style={{
+                color: "grey",
+                textDecoration: "none",
+              }}
+            >
+              <StyledMenuItem>
+                <ListItemIcon>
+                  <HomeIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </StyledMenuItem>
             </Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link to="/">
-              <StyledButton>
-                <HomeIcon />
-              </StyledButton>
+            <Link
+              to="/favorites"
+              style={{
+                color: "grey",
+                textDecoration: "none",
+              }}
+            >
+              <StyledMenuItem>
+                <ListItemIcon>
+                  <StarIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Favorites" />
+              </StyledMenuItem>
             </Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            {" "}
             {!isLog ? (
-              <Link style={{ textDecoration: "none" }} to="/login">
-                <StyledButton>Login</StyledButton>
+              <Link
+                to="/login"
+                style={{
+                  color: "grey",
+                  textDecoration: "none",
+                }}
+              >
+                <StyledMenuItem>
+                  <ListItemIcon>
+                    <LockIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText primary="Login" />
+                </StyledMenuItem>
               </Link>
             ) : (
-              <StyledButton onClick={handleLogOut}>Logout</StyledButton>
+              <StyledMenuItem onClick={handleLogOut}>
+                <ListItemIcon>
+                  <LockOpenIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText style={{ color: "grey" }} primary="Logout" />
+              </StyledMenuItem>
             )}
-          </MenuItem>
-        </Menu>
-      </div>
-    </NavbarContainer>
+          </StyledMenu>
+          <Typography className={classes.title} variant="h6" noWrap>
+            Anime-List
+          </Typography>
+          {diplaySearchBar()}
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 };
-
-const NavbarContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  height: 100px;
-  flex-wrap: wrap;
-  @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
-    justify-content: center;
-  }
-
-  form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    input {
-      width: 170px;
-      line-height: normal;
-      min-height: 16px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-      border-radius: 16px;
-      color: #111;
-      padding: 6px 12px;
-      outline: none;
-    }
-  }
-`;
-
-const Logo = styled.h1`
-  img {
-    height: 100px;
-    width: 300px;
-  }
-`;
-
-const ButtonSearch = styled.button`
-  margin: 10px;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 20px;
-`;
-const StyledButton = styled(Button)`
-  &:hover {
-    background-color: transparent !important;
-  }
-`;
