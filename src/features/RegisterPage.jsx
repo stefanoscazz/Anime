@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   container: {
-    minHeight: "calc(100vh - 180px)",
+    minHeight: "calc(100vh - 150px)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

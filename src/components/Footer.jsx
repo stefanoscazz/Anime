@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     color: "white",
-    letterSpacing: "2px",
+    letterSpacing: "3px",
   },
   box: {
     display: "flex",

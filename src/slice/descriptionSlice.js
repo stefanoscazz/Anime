@@ -6,7 +6,7 @@ export const descriptionAction = createAsyncThunk("descriptionSlice/descriptionA
     const url = `https://api.jikan.moe/v3/anime/${id}`
     try {
         const data = await axios.get(url)
-        console.log(data)
+
         return data.data;
     }
     catch (error) {

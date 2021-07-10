@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
+
   menuButton: {
     marginRight: theme.spacing(2),
   },
@@ -66,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       display: "block",
       letterSpacing: "3px",
+      marginLeft: "50px",
     },
   },
   search: {
@@ -129,7 +131,7 @@ export const Navbar = () => {
   const [inputValue, setInputValue] = useState("");
   const id = useSelector((state) => state.user.id);
   const isLog = auth.currentUser;
-  console.log(location);
+
   const diplaySearchBar = () => {
     if (
       location.pathname === "/login" ||
@@ -168,6 +170,7 @@ export const Navbar = () => {
     setInputValue(e.target.value);
   };
   const handleLogOut = () => {
+    setAnchorEl(null);
     auth
       .signOut()
       .then(() => {
@@ -179,7 +182,7 @@ export const Navbar = () => {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             aria-controls="customized-menu"
             aria-haspopup="true"
@@ -192,7 +195,6 @@ export const Navbar = () => {
           <StyledMenu
             id="customized-menu"
             anchorEl={anchorEl}
-            keepMounted
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
@@ -202,6 +204,7 @@ export const Navbar = () => {
                 color: "grey",
                 textDecoration: "none",
               }}
+              onClick={handleClose}
             >
               <StyledMenuItem>
                 <ListItemIcon>
@@ -216,6 +219,7 @@ export const Navbar = () => {
                 color: "grey",
                 textDecoration: "none",
               }}
+              onClick={handleClose}
             >
               <StyledMenuItem>
                 <ListItemIcon>
@@ -231,6 +235,7 @@ export const Navbar = () => {
                   color: "grey",
                   textDecoration: "none",
                 }}
+                onClick={handleClose}
               >
                 <StyledMenuItem>
                   <ListItemIcon>
@@ -248,9 +253,11 @@ export const Navbar = () => {
               </StyledMenuItem>
             )}
           </StyledMenu>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Anime-List
-          </Typography>
+          <Typography
+            className={classes.title}
+            variant="h6"
+            noWrap
+          ></Typography>
           {diplaySearchBar()}
         </Toolbar>
       </AppBar>

@@ -1,16 +1,52 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import { CardAnime } from "../components/CardAnime";
-import WhatshotTwoToneIcon from "@material-ui/icons/WhatshotTwoTone";
 import { useEffect } from "react";
 import { topAnimeAction } from "../slice/topAnimeSlice";
 import { useDispatch, useSelector } from "react-redux";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { v4 as uuidv4 } from "uuid";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
+import { auth } from "../firebase";
 
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4),
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+  card: {
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  cardMedia: {
+    paddingTop: "56.25%", // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
+  },
+}));
 export const HomePage = () => {
+  const classes = useStyles();
   const dispatch = useDispatch();
+  const isLog = auth.currentUser;
   const listTopAnime = useSelector((state) => state.top.list);
   const statusTopAnime = useSelector((state) => state.top.status);
   const listSearchAnime = useSelector((state) => state.search.list);
@@ -29,17 +65,7 @@ export const HomePage = () => {
       return <h1> No connection, please connect and try again</h1>;
     }
     if (statusTopAnime === "success") {
-      return listTopAnime.map((el) => {
-        return (
-          <Link
-            key={uuidv4()}
-            style={{ textDecoration: "none", color: "black" }}
-            to={{ pathname: `/description/${el.mal_id}` }}
-          >
-            <CardAnime data={el} key={el.mal_id} />
-          </Link>
-        );
-      });
+      return <CardAnime data={listTopAnime} />;
     }
   };
 
@@ -53,66 +79,59 @@ export const HomePage = () => {
       return displayTopAnime();
     }
     if (statusSearchAnime === "success") {
-      return listSearchAnime.map((el) => {
-        return (
-          <Link
-            key={uuidv4()}
-            style={{ textDecoration: "none", color: "black" }}
-            to={{ pathname: `/description/${el.mal_id}` }}
-          >
-            <CardAnime key={el.mal_id} data={el}  />
-          </Link>
-        );
-      });
+      return <CardAnime data={listSearchAnime} />;
     }
   };
 
   return (
-    <HomeContainer>
-      {!statusSearchAnime || statusSearchAnime === "failed" ? (
-        <Top>
-          <h3>
-            TOP{" "}
-            <WhatshotTwoToneIcon
-              style={{ color: "#cc0000", fontSize: "30px" }}
-            />
-          </h3>
-        </Top>
-      ) : null}
+    <div>
+      <div>
+        <div className={classes.heroContent}>
+          <Container maxWidth="sm">
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="textPrimary"
+              gutterBottom
+            >
+              Anime List
+            </Typography>
+            <Typography
+              variant="h5"
+              align="center"
+              color="textSecondary"
+              paragraph
+            >
+              {isLog
+                ? "Save anime in your favorites list"
+                : "Search an anime, sign in and save it to your favorites list"}
+            </Typography>
 
-      <CardSection>
+            {isLog ? null : (
+              <div className={classes.heroButtons}>
+                <Grid container spacing={2} justifyContent="center">
+                  <Grid item>
+                    <Link to="/login" style={{ textDecoration: "none" }}>
+                      <Button variant="contained" color="primary">
+                        sign in
+                      </Button>
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link to="/register" style={{ textDecoration: "none" }}>
+                      <Button variant="outlined" color="primary">
+                        sign up
+                      </Button>
+                    </Link>
+                  </Grid>
+                </Grid>
+              </div>
+            )}
+          </Container>
+        </div>
         {statusSearchAnime ? displaySearchAnime() : displayTopAnime()}
-      </CardSection>
-    </HomeContainer>
+      </div>
+    </div>
   );
 };
-const HomeContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  flex-direction: column;
-`;
-const CardSection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 20px;
-`;
-const Top = styled.div`
-  height: 50px;
-  padding-left: 10px;
-  width: 80vw;
-  border-bottom: 2px solid #ddd;
-  margin-bottom: 10px;
-  h3 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-style: italic;
-    letter-spacing: 7px;
-    color: rgb(51, 51, 51);
-    font-weight: 900;
-  }
-`;

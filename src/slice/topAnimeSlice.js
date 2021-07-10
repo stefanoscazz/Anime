@@ -24,7 +24,7 @@ const topAnimeSlice = createSlice({
         },
         [topAnimeAction.fulfilled]: (state, { payload }) => {
             state.status = "success"
-            state.list = payload.top.slice(0, 10);
+            state.list = payload.top.slice(0, 9);
         },
         [topAnimeAction.rejected]: (state) => {
             state.status = "failed"

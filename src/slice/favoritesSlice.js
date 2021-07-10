@@ -8,7 +8,7 @@ export const addFavoritesAction =
             const res = await db.collection("user")
                 .doc(id)
                 .collection("preferiti").get().then((result) => result.docs.forEach(el => arr.push(el.data())))
-            console.log(arr)
+
             return arr;
         }
         catch (error) {
@@ -19,7 +19,8 @@ const favoritesSlice = createSlice({
     name: "favoritesSlice",
     initialState: {
         list: null,
-        status: null
+        status: null,
+        errorMessage: null
     },
     reducers: {
         removeList: (state, action) => {

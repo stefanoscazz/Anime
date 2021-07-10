@@ -25,7 +25,7 @@ const searchSlice = createSlice({
         },
         [searchAction.fulfilled]: (state, { payload }) => {
             state.status = "success"
-            state.list = payload.results;
+            state.list = payload.results.slice(0, 12);
         },
         [searchAction.rejected]: (state) => {
             state.status = "failed"
