@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 export const DescriptionLogged = ({ data }) => {
   const { title,
     duration,
@@ -37,7 +36,6 @@ export const DescriptionLogged = ({ data }) => {
     status_anime,
     synopsis,
     episodes,
-    status,
     title_english,
     title_japanese,
     source,
@@ -51,29 +49,6 @@ export const DescriptionLogged = ({ data }) => {
   const characters = useSelector((state) => state.characters);
   const [displayButton, setdisplayButton] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
-    checkCurrentAnime()
-
-  }, [favorites.list])
-
-
-  const handleRemove = () => {
-    db.collection("user")
-      .doc(id_user)
-      .collection("preferiti")
-      .doc(title)
-      .delete()
-      .then(() => dispatch(addFavoritesAction(id_user)));
-  };
-  const handleAdd = () => {
-    db.collection("user").doc(id_user).collection("preferiti").doc(title).set({
-      title: title,
-      description: synopsis,
-      img_url: image_url,
-      id: id_anime,
-    });
-    dispatch(addFavoritesAction(id_user));
-  };
   const checkCurrentAnime = () => {
     if (favorites.status === "success") {
       const filter = favorites.list.filter((el) => el.id === id_anime);
@@ -87,9 +62,35 @@ export const DescriptionLogged = ({ data }) => {
       setdisplayButton(false);
     }
   };
+  useEffect(() => {
+    checkCurrentAnime()
+  }, [favorites.list])
+
+
+  const handleRemove = () => {
+    setdisplayButton(true)
+    db.collection("user")
+      .doc(id_user)
+      .collection("preferiti")
+      .doc(title)
+      .delete()
+      .then(() => dispatch(addFavoritesAction(id_user)));
+
+  };
+  const handleAdd = () => {
+    setdisplayButton(true)
+    db.collection("user").doc(id_user).collection("preferiti").doc(title).set({
+      title: title,
+      description: synopsis,
+      img_url: image_url,
+      id: id_anime,
+    });
+    dispatch(addFavoritesAction(id_user));
+  };
+
   return (
     <div>
-      {favorites.status === "success" ?
+      {favorites.status ?
         <Container maxWidth="lg" className={classes.container}>
           <Grid
             className={classes.main}
@@ -113,7 +114,7 @@ export const DescriptionLogged = ({ data }) => {
                 alignItems="center"
               >
                 <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
-                {displayButton ? (
+                {displayButton && favorites.status === "success" ? (
                   <Button
                     className={classes.button}
                     startIcon={<DeleteIcon />}

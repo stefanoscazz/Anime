@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import db, { auth, provider } from "../firebase";
-import firebase from "firebase";
+import { auth, provider } from "../firebase";
+import firebase from "firebase/app";
 
 
 export const loginWithEmailPasswordAction = createAsyncThunk("userSlice/loginWithEmailPasswordAction",

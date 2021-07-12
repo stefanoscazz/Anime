@@ -11,7 +11,7 @@ import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { auth } from "../firebase";
-
+import { isEmpty } from "lodash";
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -44,9 +44,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const HomePage = () => {
+  const authUser = window.sessionStorage;
   const classes = useStyles();
   const dispatch = useDispatch();
-  const isLog = auth.currentUser;
   const listTopAnime = useSelector((state) => state.top.list);
   const statusTopAnime = useSelector((state) => state.top.status);
   const listSearchAnime = useSelector((state) => state.search.list);
@@ -56,7 +56,7 @@ export const HomePage = () => {
 
   useEffect(() => {
     dispatch(topAnimeAction());
-  }, []);
+  }, [dispatch]);
   const displayTopAnime = () => {
     if (statusTopAnime === "loading") {
       return <CircularProgress />;
@@ -103,12 +103,12 @@ export const HomePage = () => {
               color="textSecondary"
               paragraph
             >
-              {isLog
+              {!isEmpty(authUser)
                 ? "Save anime in your favorites list"
                 : "Search an anime, sign in and save it to your favorites list"}
             </Typography>
 
-            {isLog ? null : (
+            {!isEmpty(authUser) ? null : (
               <div className={classes.heroButtons}>
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item>

@@ -1,21 +1,17 @@
 import {
   Button,
   Card,
-  CardActionArea,
   CardContent,
-  CardMedia,
   Container,
   Grid,
-  Hidden,
   makeStyles,
   Typography,
 } from "@material-ui/core";
 import { isEmpty } from "lodash";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import db, { auth } from "../firebase";
+import db from "../firebase";
 import { addFavoritesAction } from "../slice/favoritesSlice";
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -60,10 +56,6 @@ export const FavoritesPage = () => {
   const favorites = useSelector((state) => state.favorites);
   const user = useSelector((state) => state.user);
   const authUser = window.sessionStorage;
-
-  useEffect(() => {
-    dispatch(addFavoritesAction(user.id));
-  }, []);
   const displayFavorites = () => {
     if (
       !isEmpty(authUser) &&
@@ -130,7 +122,7 @@ export const FavoritesPage = () => {
     ) {
       return (
         <Container className={classes.container} maxWidth="lg">
-          <Typography variant="h3">Favorites list is empty o </Typography>
+          <Typography variant="h3">Favorites list is empty</Typography>
           <Typography variant="h6">
             return to <Link to="/">home</Link>
           </Typography>

@@ -5,11 +5,10 @@ import { HomePage } from "./features/HomePage";
 import { RegisterPage } from "./features/RegisterPage";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
-import { useDispatch, useSelector } from "react-redux";
-import { setActiveUser, setFavoritesList } from "./slice/userSlice";
-import db, { auth } from "./firebase";
+import { useDispatch } from "react-redux";
+import { setActiveUser } from "./slice/userSlice";
+import { auth } from "./firebase";
 import { DescriptionPage } from "./features/DescriptionPage";
-import { useEffect } from "react";
 import { FavoritesPage } from "./features/FavoritesPage";
 import { addFavoritesAction } from "./slice/favoritesSlice";
 import { createTheme, ThemeProvider } from "@material-ui/core";
@@ -24,12 +23,7 @@ const theme = createTheme({
 })
 
 function App() {
-  const user = useSelector(state => state.user)
-
   const dispatch = useDispatch();
-  useEffect(() => {
-
-  }, []);
   //refresh page add data of current user in redux
 
   auth.onAuthStateChanged((user) => {
@@ -45,8 +39,6 @@ function App() {
           email: auth.currentUser.email,
         })
       );
-
-
     } else {
       // No user is signed in.
       console.log("da app.js no sign in");

@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import SearchIcon from "@material-ui/icons/Search";
 import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import { useState } from "react";
 import { searchAction } from "../slice/searchSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { auth } from "../firebase";
 import { setUserLogOutState } from "../slice/userSlice";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import { addFavoritesAction, removeList } from "../slice/favoritesSlice";
+import { logOutAction } from "../slice/favoritesSlice";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,6 +22,10 @@ import ListItemText from "@material-ui/core/ListItemText";
 import StarIcon from "@material-ui/icons/Star";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
+
+
+
+
 const StyledMenu = withStyles({
   paper: {
     border: "1px solid #d3d4d5",
@@ -52,6 +56,8 @@ const StyledMenuItem = withStyles((theme) => ({
     },
   },
 }))(MenuItem);
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -127,9 +133,7 @@ export const Navbar = () => {
 
   //Redux State
   const dispatch = useDispatch();
-  const [profile, setProfile] = useState(true);
   const [inputValue, setInputValue] = useState("");
-  const id = useSelector((state) => state.user.id);
   const isLog = auth.currentUser;
 
   const diplaySearchBar = () => {
@@ -175,7 +179,7 @@ export const Navbar = () => {
       .signOut()
       .then(() => {
         dispatch(setUserLogOutState());
-        dispatch(removeList());
+        dispatch(logOutAction());
       })
       .catch((err) => alert(err.message));
   };

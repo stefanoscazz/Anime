@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import db, { auth, provider } from "../firebase";
+import db from "../firebase";
 
 export const addFavoritesAction =
     createAsyncThunk("favoritesSlice/addFavoritesAction", async (id) => {
@@ -23,10 +23,13 @@ const favoritesSlice = createSlice({
         errorMessage: null
     },
     reducers: {
-        removeList: (state, action) => {
+        logOutAction: (state, action) => {
             state.list = null;
             state.status = null;
         },
+        removeFromList: (state, { id_anime }) => {
+            state.list = state.list.filter(el => el.id === id_anime)
+        }
     },
     extraReducers: {
         [addFavoritesAction.pending]: (state, action) => {
@@ -47,4 +50,4 @@ const favoritesSlice = createSlice({
 
 
 export default favoritesSlice.reducer;
-export const { removeList } = favoritesSlice.actions
+export const { logOutAction, removeFromList } = favoritesSlice.actions
