@@ -1,17 +1,19 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { LoginPage } from "./features/LoginPage";
-import { HomePage } from "./features/HomePage";
-import { RegisterPage } from "./features/RegisterPage";
+import { LoginPage } from "./pages/LoginPage";
+import { HomePage } from "./pages/HomePage";
+import { RegisterPage } from "./pages/RegisterPage";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
-import { useDispatch } from "react-redux";
-import { setActiveUser } from "./slice/userSlice";
-import { auth } from "./firebase";
-import { DescriptionPage } from "./features/DescriptionPage";
-import { FavoritesPage } from "./features/FavoritesPage";
+import { useDispatch, useSelector } from "react-redux";
+import { DescriptionPage } from "./pages/DescriptionPage";
+import { FavoritesPage } from "./pages/FavoritesPage";
 import { addFavoritesAction } from "./slice/favoritesSlice";
 import { createTheme, ThemeProvider } from "@material-ui/core";
+import { useEffect } from "react";
+import { topAnimeAction } from "./slice/topAnimeSlice";
+
+
 
 const theme = createTheme({
   palette: {
@@ -23,29 +25,16 @@ const theme = createTheme({
 })
 
 function App() {
+
+  const user = useSelector(state => state.user)
   const dispatch = useDispatch();
-  //refresh page add data of current user in redux
-
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in.
-      dispatch(addFavoritesAction(user.uid))
-
-      dispatch(
-        setActiveUser({
-          id: auth.currentUser.uid,
-          userName: auth.currentUser.displayName,
-          photoURL: auth.currentUser.photoURL,
-          email: auth.currentUser.email,
-        })
-      );
-    } else {
-      // No user is signed in.
-      console.log("da app.js no sign in");
-    }
-  });
+  useEffect(() => {
+    dispatch(topAnimeAction())
+    dispatch(addFavoritesAction(user.id))
+  }, [dispatch])
 
   return (
+
     <ThemeProvider theme={theme}>
       <Router>
         <div className="App" >
@@ -61,6 +50,7 @@ function App() {
         <Footer />
       </Router>
     </ThemeProvider>
+
   );
 }
 

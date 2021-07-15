@@ -10,8 +10,14 @@ export const loginWithEmailPasswordAction = createAsyncThunk("userSlice/loginWit
                 .setPersistence(firebase.auth.Auth.Persistence.SESSION)
             const res = await auth.signInWithEmailAndPassword(state.email, state.password);
             const data = res;
-            return data;
-
+            const { uid, displayName, photoURL, email } = data.user;
+            const obj = {
+                uid,
+                displayName,
+                photoURL,
+                email
+            }
+            return obj;
         }
         catch (error) {
             throw Error(error);
@@ -25,7 +31,16 @@ export const loginGoogleAction =
                 .setPersistence(firebase.auth.Auth.Persistence.SESSION)
             const res = await auth.signInWithPopup(provider);
             const data = res;
-            return data;
+            const { uid, displayName, photoURL, email } = data.user;
+            const obj = {
+                uid,
+                displayName,
+                photoURL,
+                email
+            }
+            return obj;
+
+
         }
         catch (error) {
 
@@ -64,10 +79,10 @@ const userSlice = createSlice({
         },
         [loginGoogleAction.fulfilled]: (state, { payload }) => {
             state.status = "success"
-            state.id = payload.user.uid;
-            state.userName = payload.user.displayName;
-            state.photoURL = payload.user.photoURL;
-            state.email = payload.user.email;
+            state.id = payload.uid;
+            state.userName = payload.displayName;
+            state.photoURL = payload.photoURL;
+            state.email = payload.email;
 
         },
         [loginGoogleAction.rejected]: (state, { error }) => {
@@ -79,10 +94,10 @@ const userSlice = createSlice({
         },
         [loginWithEmailPasswordAction.fulfilled]: (state, { payload }) => {
             state.status = "success"
-            state.id = payload.user.uid;
-            state.userName = payload.user.displayName;
-            state.photoURL = payload.user.photoURL;
-            state.email = payload.user.email;
+            state.id = payload.uid;
+            state.userName = payload.displayName;
+            state.photoURL = payload.photoURL;
+            state.email = payload.email;
 
         },
         [loginWithEmailPasswordAction.rejected]: (state, { error }) => {

@@ -54,12 +54,6 @@ export const CardAnime = ({ data }) => {
         {data.map((el) => (
           <Grid item key={el.mal_id} xs={12} sm={6} md={4}>
             <Card className={classes.card}>
-              {/* <CardMedia
-                className={classes.cardMedia}
-                image={el.image_url}
-                title="Image title"
-                component="img"
-              /> */}
               <img
                 style={{ height: "230px", width: "170px" }}
                 src={el.image_url}

@@ -52,11 +52,11 @@ export const HomePage = () => {
   const listSearchAnime = useSelector((state) => state.search.list);
   const statusSearchAnime = useSelector((state) => state.search.status);
 
+
+
+
   //ACTION TO DISPLAY TOP ANIME
 
-  useEffect(() => {
-    dispatch(topAnimeAction());
-  }, [dispatch]);
   const displayTopAnime = () => {
     if (statusTopAnime === "loading") {
       return <CircularProgress />;

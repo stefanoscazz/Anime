@@ -135,34 +135,6 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState("");
   const isLog = auth.currentUser;
-
-  const diplaySearchBar = () => {
-    if (
-      location.pathname === "/login" ||
-      location.pathname === "/register" ||
-      location.pathname.includes("/description") ||
-      location.pathname === "/favorites"
-    ) {
-      return null;
-    } else {
-      return (
-        <form onSubmit={handleSubmit} className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <InputBase
-            onChange={handleOnChange}
-            placeholder="Search…"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ "aria-label": "search" }}
-          />
-        </form>
-      );
-    }
-  };
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue) {
@@ -262,7 +234,22 @@ export const Navbar = () => {
             variant="h6"
             noWrap
           ></Typography>
-          {diplaySearchBar()}
+          {location.pathname === "/" && (
+            <form onSubmit={handleSubmit} className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                onChange={handleOnChange}
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+              />
+            </form>
+          )}
         </Toolbar>
       </AppBar>
     </div>

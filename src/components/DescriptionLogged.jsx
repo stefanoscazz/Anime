@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     padding: theme.spacing(3),
     minHeight: "calc(100vh - 150px)"
+
   },
   main: {
     paddingBottom: theme.spacing(6),
@@ -39,7 +40,8 @@ export const DescriptionLogged = ({ data }) => {
     title_english,
     title_japanese,
     source,
-    score } = data;
+    score,
+    status } = data;
 
   const location = useLocation()
   const id_anime = location.pathname.slice(13);
@@ -49,6 +51,10 @@ export const DescriptionLogged = ({ data }) => {
   const characters = useSelector((state) => state.characters);
   const [displayButton, setdisplayButton] = useState(false);
   const dispatch = useDispatch();
+  useEffect(() => {
+    checkCurrentAnime()
+  }, [favorites.list])
+
   const checkCurrentAnime = () => {
     if (favorites.status === "success") {
       const filter = favorites.list.filter((el) => el.id === id_anime);
@@ -62,9 +68,7 @@ export const DescriptionLogged = ({ data }) => {
       setdisplayButton(false);
     }
   };
-  useEffect(() => {
-    checkCurrentAnime()
-  }, [favorites.list])
+
 
 
   const handleRemove = () => {
@@ -88,129 +92,134 @@ export const DescriptionLogged = ({ data }) => {
     dispatch(addFavoritesAction(id_user));
   };
 
-  return (
-    <div>
-      {favorites.status ?
-        <Container maxWidth="lg" className={classes.container}>
+  if (status === "success") {
+    return (
+      <Container maxWidth="lg" className={classes.container}>
+        <Grid
+          className={classes.main}
+          xs={12}
+          sm={12}
+          container
+          justifyContent="center"
+        >
           <Grid
-            className={classes.main}
-            xs={12}
-            sm={12}
             container
             justifyContent="center"
+            style={{ flexDirection: "colomn" }}
+            xs={12}
+            sm={6}
           >
             <Grid
-              container
-              justifyContent="center"
-              style={{ flexDirection: "colomn" }}
               xs={12}
               sm={6}
+              container
+              justifyContent="center"
+              alignItems="center"
             >
-              <Grid
-                xs={12}
-                sm={6}
-                container
-                justifyContent="center"
-                alignItems="center"
-              >
-                <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
-                {displayButton && favorites.status === "success" ? (
-                  <Button
-                    className={classes.button}
-                    startIcon={<DeleteIcon />}
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleRemove}
-                  >
-                    Remove
-                  </Button>
-                ) : (
-                  <Button
-                    className={classes.button}
-                    startIcon={<AddIcon />}
-                    variant="contained"
-                    color="primary"
-                    onClick={handleAdd}
-                  >
-                    Add to List
-                  </Button>
-                )}
-              </Grid>
-            </Grid>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="h5">{title}</Typography>
-              <Typography variant="body1" gutterBottom>
-                {synopsis}
-              </Typography>
+              <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
+              {displayButton ? (
+                <Button
+                  className={classes.button}
+                  startIcon={<DeleteIcon />}
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleRemove}
+                >
+                  Remove
+                </Button>
+              ) : (
+                <Button
+                  className={classes.button}
+                  startIcon={<AddIcon />}
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAdd}
+                >
+                  Add to List
+                </Button>
+              )}
             </Grid>
           </Grid>
-          <Grid container xs={12} sm={12}>
-            <Grid xs={12} sm={3}>
-              <Typography variant="h4">Info</Typography>
-              <Typography variant="body1" gutterBottom>
-                Episodes:{episodes}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Duration: {duration}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Status Anime:{status_anime}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Title English: {title_english}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Title Japanese: {title_japanese}
-              </Typography>
+          <Grid item xs={12} sm={12} >
+            <Typography variant="h5">{title}</Typography>
+            <Typography variant="body1" gutterBottom>
+              {synopsis}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container xs={12} sm={12}>
+          <Grid xs={12} sm={3}>
+            <Typography variant="h4">Info</Typography>
+            <Typography variant="body1" gutterBottom>
+              Episodes:{episodes}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Duration: {duration}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Status Anime:{status_anime}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Title English: {title_english}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Title Japanese: {title_japanese}
+            </Typography>
 
-              <Typography variant="body1" gutterBottom>
-                Source: {source}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Score: {score}
-              </Typography>
+            <Typography variant="body1" gutterBottom>
+              Source: {source}
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Score: {score}
+            </Typography>
+          </Grid>
+          <Grid container xs={12} sm={8}>
+            <Typography variant="h4">Main Characters</Typography>
+            <Grid container>
+              {!isEmpty(characters.list) &&
+                characters.list.map((el) => {
+                  return (
+                    <Grid key={el.mal_id}>
+                      <img
+                        style={{ height: "120px" }}
+                        src={el.image_url}
+                        alt=""
+                      />
+                      <p style={{ width: "120px" }}>{el.name}</p>
+                    </Grid>
+                  );
+                })}
             </Grid>
-            <Grid container xs={12} sm={8}>
-              <Typography variant="h4">Main Characters</Typography>
-              <Grid container>
-                {!isEmpty(characters.list) &&
-                  characters.list.map((el) => {
-                    return (
-                      <Grid key={el.mal_id}>
-                        <img
-                          style={{ height: "120px" }}
-                          src={el.image_url}
-                          alt=""
-                        />
-                        <p style={{ width: "120px" }}>{el.name}</p>
-                      </Grid>
-                    );
-                  })}
-              </Grid>
-              <Grid
-                container
-                style={{ flexDirection: "column", justifyContent: "center" }}
-              >
-                <Typography variant="h4">Trailer</Typography>
+            <Grid
+              container
+              style={{ flexDirection: "column", justifyContent: "center" }}
+            >
+              <Typography variant="h4">Trailer</Typography>
 
-                <iframe width="320" height="230" title={title} src={trailer_url}></iframe>
-              </Grid>
+              <iframe width="320" height="230" title={title} src={trailer_url}></iframe>
             </Grid>
           </Grid>
-        </Container>
-        : <Container maxWidth="lg" className={classes.container}>
-          <Grid
+        </Grid>
+      </Container>
+    )
+  } else if (status === "loading") {
+    return (
+      <Container maxWidth="lg" className={classes.container}>
+        <Grid xs={12}
+          sm={12}
+          container
+          justifyContent="center"
+          alignItems="center"
+        >
+          <CircularProgress size="100px" />
+        </Grid>
+      </Container>
+    )
+  }
+  return (
+    <Container maxWidth="lg" className={classes.container}>
 
-            xs={12}
-            sm={12}
-            container
-            justifyContent="center"
-            alignItems="center"
-          >
-            <CircularProgress size="100px" />
-          </Grid>
-        </Container>
-      }
-    </div>
+    </Container>
+
   )
 };

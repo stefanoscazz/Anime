@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     container: {
         color: theme.palette.text.secondary,
         padding: theme.spacing(3),
-        minHeight: "calc(100vh - 150px)"
+
     },
     main: {
         paddingBottom: theme.spacing(6),
@@ -39,7 +39,6 @@ export const DescriptionGuest = ({ data }) => {
 
     return (
         <div>
-
             <Container maxWidth="lg" className={classes.container}>
                 <Grid
                     className={classes.main}

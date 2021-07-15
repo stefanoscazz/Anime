@@ -14,12 +14,11 @@ export const DescriptionPage = ({ location }) => {
   const dispatch = useDispatch();
   const description = useSelector((state) => state.description);
   const id_anime = location.pathname.slice(13);
-
   useEffect(() => {
-    dispatch(descriptionAction(id_anime));
-    dispatch(charactersAction(id_anime));
-  }, [dispatch, id_anime]);
+    dispatch(descriptionAction(id_anime))
+    dispatch(charactersAction(id_anime))
+  }, [])
 
-  return <div>{!isEmpty(authUser) ? <DescriptionLogged data={description} /> : <DescriptionGuest data={description} />}</div>;
+  return <div>{isEmpty(authUser) ? <DescriptionGuest data={description} /> : <DescriptionLogged data={description} />}</div>;
 };
 
