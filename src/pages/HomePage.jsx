@@ -1,17 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { CardAnime } from "../components/CardAnime";
-import { useEffect } from "react";
-import { topAnimeAction } from "../slice/topAnimeSlice";
-import { useDispatch, useSelector } from "react-redux";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { auth } from "../firebase";
 import { isEmpty } from "lodash";
+import TopAnime from "../components/TopAnime";
+import SearchAnime from "../components/SearchAnime";
+
+
 const useStyles = makeStyles((theme) => ({
   icon: {
     marginRight: theme.spacing(2),
@@ -33,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
   },
   cardMedia: {
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "56.25%",
   },
   cardContent: {
     flexGrow: 1,
@@ -46,42 +45,7 @@ const useStyles = makeStyles((theme) => ({
 export const HomePage = () => {
   const authUser = window.sessionStorage;
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const listTopAnime = useSelector((state) => state.top.list);
-  const statusTopAnime = useSelector((state) => state.top.status);
-  const listSearchAnime = useSelector((state) => state.search.list);
-  const statusSearchAnime = useSelector((state) => state.search.status);
-
-
-
-
-  //ACTION TO DISPLAY TOP ANIME
-
-  const displayTopAnime = () => {
-    if (statusTopAnime === "loading") {
-      return <CircularProgress />;
-    }
-    if (statusTopAnime === "failed") {
-      return <h1> No connection, please connect and try again</h1>;
-    }
-    if (statusTopAnime === "success") {
-      return <CardAnime data={listTopAnime} />;
-    }
-  };
-
-  //ACTION TO DISPLAY SEARCH ANIME
-
-  const displaySearchAnime = () => {
-    if (statusSearchAnime === "loading") {
-      return <CircularProgress />;
-    }
-    if (statusSearchAnime === "failed") {
-      return displayTopAnime();
-    }
-    if (statusSearchAnime === "success") {
-      return <CardAnime data={listSearchAnime} />;
-    }
-  };
+  const search = useSelector((state) => state.search);
 
   return (
     <div>
@@ -130,8 +94,8 @@ export const HomePage = () => {
             )}
           </Container>
         </div>
-        {statusSearchAnime ? displaySearchAnime() : displayTopAnime()}
+        {search.status ? <SearchAnime /> : <TopAnime />}
       </div>
-    </div>
+    </div >
   );
 };

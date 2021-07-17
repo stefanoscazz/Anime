@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     borderBottom: "2px solid black",
   },
 }));
-
+// Component for logged user
 export const DescriptionLogged = ({ data }) => {
   const { title,
     duration,
@@ -91,7 +91,8 @@ export const DescriptionLogged = ({ data }) => {
     });
     dispatch(addFavoritesAction(id_user));
   };
-
+  //Conditional render based on application state
+  // status = status descprition slice
   if (status === "success") {
     return (
       <Container maxWidth="lg" className={classes.container}>

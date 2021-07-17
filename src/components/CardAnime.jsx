@@ -31,11 +31,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
-
-  cardMedia: {
-    // 16:9
-  },
-
   cardContent: {
     flexGrow: 1,
   },
@@ -46,11 +41,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 export const CardAnime = ({ data }) => {
   const classes = useStyles();
-  // data from HomePage
-  console.log(data);
+  // Data from HomePage
   return (
     <Container className={classes.cardGrid} maxWidth="md">
       <Grid container spacing={6}>
+        {/* return all anime from redux state */}
         {data.map((el) => (
           <Grid item key={el.mal_id} xs={12} sm={6} md={4}>
             <Card className={classes.card}>

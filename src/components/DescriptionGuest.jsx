@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         borderBottom: "2px solid black",
     },
 }));
-
+// Component for user not logged
 export const DescriptionGuest = ({ data }) => {
     const { title,
         duration,

@@ -96,89 +96,89 @@ export const RegisterPage = () => {
   const onChangePass = (e) => setPassword(e.target.value);
   const onChangeEmail = (e) => setEmail(e.target.value);
   const handleConfirmPass = (e) => setConfirmPass(e.target.value);
-  const displayRegister = () => {
-    if (!success) {
-      return (
-        <Container className={classes.container} component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign up
-            </Typography>
-            <form onSubmit={handleSubmit} className={classes.form} noValidate>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={onChangeEmail}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={onChangePass}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    onChange={handleConfirmPass}
-                    value={confirmPass}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name=" confirm-password"
-                    label="Confirm Password"
-                    type="password"
-                    id="confirm-password"
-                  />
-                  {errorInput ? (
-                    <FormHelperText error id="confirm-password">
-                      {messageError}
-                    </FormHelperText>
-                  ) : null}
-                </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign Up
-              </Button>
 
-              <Grid container justifyContent="flex-end">
-                <Grid item>
-                  <Link to="/login" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
-                </Grid>
+  if (!success) {
+    return (
+      <Container className={classes.container} component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form onSubmit={handleSubmit} className={classes.form} noValidate>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={onChangeEmail}
+                />
               </Grid>
-            </form>
-          </div>
-        </Container>
-      );
-    } else {
-      return <Redirect to="/login" />;
-    }
-  };
-  return <div>{displayRegister()}</div>;
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={onChangePass}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  onChange={handleConfirmPass}
+                  value={confirmPass}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  name=" confirm-password"
+                  label="Confirm Password"
+                  type="password"
+                  id="confirm-password"
+                />
+                {errorInput ? (
+                  <FormHelperText error id="confirm-password">
+                    {messageError}
+                  </FormHelperText>
+                ) : null}
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign Up
+            </Button>
+
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link to="/login" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
+    );
+  } else {
+    return <Redirect to="/login" />;
+  }
 };
+
+

@@ -7,18 +7,16 @@ import { searchAction } from "../slice/searchSlice";
 import { useDispatch } from "react-redux";
 import { auth } from "../firebase";
 import { setUserLogOutState } from "../slice/userSlice";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import {
+  Menu, MenuItem,
+  AppBar, Toolbar,
+  InputBase, ListItemIcon,
+  ListItemText, IconButton,
+  Typography
+} from "@material-ui/core";
 import { logOutAction } from "../slice/favoritesSlice";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
 import { alpha, makeStyles, withStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import StarIcon from "@material-ui/icons/Star";
 import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
@@ -120,21 +118,22 @@ const useStyles = makeStyles((theme) => ({
 export const Navbar = () => {
   let location = useLocation();
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState("");
+  const isLog = auth.currentUser;
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  //Menu
-  const [anchorEl, setAnchorEl] = React.useState(null);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  //Redux State
-  const dispatch = useDispatch();
-  const [inputValue, setInputValue] = useState("");
-  const isLog = auth.currentUser;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (inputValue) {
@@ -142,9 +141,12 @@ export const Navbar = () => {
     }
   };
 
+
   const handleOnChange = (e) => {
     setInputValue(e.target.value);
   };
+
+
   const handleLogOut = () => {
     setAnchorEl(null);
     auth
@@ -155,6 +157,8 @@ export const Navbar = () => {
       })
       .catch((err) => alert(err.message));
   };
+
+
   return (
     <div className={classes.root}>
       <AppBar position="static">

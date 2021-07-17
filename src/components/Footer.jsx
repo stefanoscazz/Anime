@@ -34,8 +34,8 @@ export const Footer = () => {
       <Container maxWidth="sm" className={classes.container}>
         App Realizzata da Stefano Scazzi
         <Box className={classes.box}>
-          <GitHubIcon style={{ fontSize: "30px" }} />
-          <LinkedInIcon style={{ fontSize: "40px" }} />
+          <a href="https://github.com/stefanoscazz"><GitHubIcon style={{ fontSize: "30px" }} /></a>
+          <a href="https://www.linkedin.com/in/stefano-scazzi-7a9185156/"><LinkedInIcon style={{ fontSize: "40px" }} /></a>
         </Box>
       </Container>
     </footer>

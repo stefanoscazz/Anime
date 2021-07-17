@@ -70,6 +70,7 @@ const userSlice = createSlice({
             state.userName = null;
             state.photoURL = null;
             state.email = null;
+            state.errorMessage = null;
             sessionStorage.clear()
         }
     },

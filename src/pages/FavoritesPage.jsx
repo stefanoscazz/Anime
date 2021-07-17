@@ -11,8 +11,8 @@ import { isEmpty } from "lodash";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import db from "../firebase";
-import { addFavoritesAction, removeFromList } from "../slice/favoritesSlice";
+import db, { auth } from "../firebase";
+import { removeFromList } from "../slice/favoritesSlice";
 
 
 
@@ -60,7 +60,7 @@ export const FavoritesPage = () => {
   const user = useSelector((state) => state.user);
 
   if (
-    user.id &&
+    auth.currentUser &&
     !isEmpty(favorites.list) &&
     favorites.status === "success"
   ) {
@@ -118,7 +118,7 @@ export const FavoritesPage = () => {
     );
   }
   if (
-    user.id &&
+    auth.currentUser &&
     isEmpty(favorites.list) &&
     favorites.status === "success"
   ) {
@@ -132,7 +132,7 @@ export const FavoritesPage = () => {
     );
     //
   }
-  if (!user.id) {
+  if (auth.currentUser) {
     return (
       <Container className={classes.container} maxWidth="lg">
         <Typography variant="h3">You're not logged in</Typography>
@@ -143,5 +143,9 @@ export const FavoritesPage = () => {
       </Container>
     );
   }
+  return (
+    <Container className={classes.container} maxWidth="lg">
 
+    </Container>
+  )
 };
