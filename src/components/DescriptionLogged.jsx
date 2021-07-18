@@ -2,10 +2,10 @@ import { Button, Container, Grid, makeStyles, Typography, CircularProgress } fro
 import React, { useEffect, useState } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
-import db, { auth } from "../firebase";
+import db from "../firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { addFavoritesAction } from "../slice/favoritesSlice";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { isEmpty } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +47,7 @@ export const DescriptionLogged = ({ data }) => {
   const id_anime = location.pathname.slice(13);
   const favorites = useSelector(state => state.favorites)
   const classes = useStyles();
-  const id_user = useSelector((state) => state.user.id);
+  const user = useSelector((state) => state.user);
   const characters = useSelector((state) => state.characters);
   const [displayButton, setdisplayButton] = useState(false);
   const dispatch = useDispatch();
@@ -55,16 +55,19 @@ export const DescriptionLogged = ({ data }) => {
     checkCurrentAnime()
   }, [favorites.list])
 
+
+  useHistory().listen(() => {
+    window.scrollTo(0, 0);
+  })
   const checkCurrentAnime = () => {
     if (favorites.status === "success") {
       const filter = favorites.list.filter((el) => el.id === id_anime);
-      console.log("filtrato", filter)
       if (!isEmpty(filter)) {
         setdisplayButton(true);
       } else {
         setdisplayButton(false);
       }
-    } else if (!auth.currentUser) {
+    } else if (user.id) {
       setdisplayButton(false);
     }
   };
@@ -74,22 +77,22 @@ export const DescriptionLogged = ({ data }) => {
   const handleRemove = () => {
     setdisplayButton(true)
     db.collection("user")
-      .doc(id_user)
+      .doc(user.id)
       .collection("preferiti")
       .doc(title)
       .delete()
-      .then(() => dispatch(addFavoritesAction(id_user)));
+      .then(() => dispatch(addFavoritesAction(user.id)));
 
   };
   const handleAdd = () => {
     setdisplayButton(true)
-    db.collection("user").doc(id_user).collection("preferiti").doc(title).set({
+    db.collection("user").doc(user.id).collection("preferiti").doc(title).set({
       title: title,
       description: synopsis,
       img_url: image_url,
       id: id_anime,
     });
-    dispatch(addFavoritesAction(id_user));
+    dispatch(addFavoritesAction(user.id));
   };
   //Conditional render based on application state
   // status = status descprition slice
@@ -98,48 +101,36 @@ export const DescriptionLogged = ({ data }) => {
       <Container maxWidth="lg" className={classes.container}>
         <Grid
           className={classes.main}
-          xs={12}
-          sm={12}
           container
-          justifyContent="center"
-        >
+          justifyContent="center">
           <Grid
             container
             justifyContent="center"
-            style={{ flexDirection: "colomn" }}
-            xs={12}
-            sm={6}
+            alignItems="center"
+            style={{ flexDirection: "column" }}
           >
-            <Grid
-              xs={12}
-              sm={6}
-              container
-              justifyContent="center"
-              alignItems="center"
-            >
-              <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
-              {displayButton ? (
-                <Button
-                  className={classes.button}
-                  startIcon={<DeleteIcon />}
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleRemove}
-                >
-                  Remove
-                </Button>
-              ) : (
-                <Button
-                  className={classes.button}
-                  startIcon={<AddIcon />}
-                  variant="contained"
-                  color="primary"
-                  onClick={handleAdd}
-                >
-                  Add to List
-                </Button>
-              )}
-            </Grid>
+            <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
+            {displayButton ? (
+              <Button
+                className={classes.button}
+                startIcon={<DeleteIcon />}
+                variant="contained"
+                color="secondary"
+                onClick={handleRemove}
+              >
+                Remove
+              </Button>
+            ) : (
+              <Button
+                className={classes.button}
+                startIcon={<AddIcon />}
+                variant="contained"
+                color="primary"
+                onClick={handleAdd}
+              >
+                Add to List
+              </Button>
+            )}
           </Grid>
           <Grid item xs={12} sm={12} >
             <Typography variant="h5">{title}</Typography>
@@ -148,8 +139,11 @@ export const DescriptionLogged = ({ data }) => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid container xs={12} sm={12}>
-          <Grid xs={12} sm={3}>
+        <Grid container>
+          <Grid item
+            xs={12}
+            sm={3}
+          >
             <Typography variant="h4">Info</Typography>
             <Typography variant="body1" gutterBottom>
               Episodes:{episodes}
@@ -174,7 +168,10 @@ export const DescriptionLogged = ({ data }) => {
               Score: {score}
             </Typography>
           </Grid>
-          <Grid container xs={12} sm={8}>
+          <Grid item
+            xs={12}
+            sm={8}
+          >
             <Typography variant="h4">Main Characters</Typography>
             <Grid container>
               {!isEmpty(characters.list) &&
@@ -197,7 +194,7 @@ export const DescriptionLogged = ({ data }) => {
             >
               <Typography variant="h4">Trailer</Typography>
 
-              <iframe width="320" height="230" title={title} src={trailer_url}></iframe>
+              <iframe width="320" height="230" title={title} src={trailer_url && trailer_url.slice(0, -11)}></iframe>
             </Grid>
           </Grid>
         </Grid>
@@ -206,8 +203,7 @@ export const DescriptionLogged = ({ data }) => {
   } else if (status === "loading") {
     return (
       <Container maxWidth="lg" className={classes.container}>
-        <Grid xs={12}
-          sm={12}
+        <Grid
           container
           justifyContent="center"
           alignItems="center"

@@ -2,6 +2,7 @@ import { Button, Container, Grid, makeStyles, Typography } from "@material-ui/co
 import React from "react";
 import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -34,44 +35,38 @@ export const DescriptionGuest = ({ data }) => {
 
 
     const classes = useStyles();
-    const characters = useSelector(state => state.characters)
+    const characters = useSelector(state => state.characters);
 
+    useHistory().listen(() => {
+        window.scrollTo(0, 0);
+    })
 
     return (
         <div>
             <Container maxWidth="lg" className={classes.container}>
                 <Grid
                     className={classes.main}
-                    xs={12}
-                    sm={12}
                     container
                     justifyContent="center"
                 >
                     <Grid
                         container
                         justifyContent="center"
-                        style={{ flexDirection: "colomn" }}
-                        xs={12}
-                        sm={6}
+                        alignItems="center"
+                        style={{ flexDirection: "column" }}
                     >
-                        <Grid
-                            xs={12}
-                            sm={6}
-                            container
-                            justifyContent="center"
-                            alignItems="center"
+
+                        <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
+                        <Button
+                            disabled
+                            className={classes.button}
+                            variant="contained"
+                            color="secondary"
                         >
-                            <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
-                            <Button
-                                disabled
-                                className={classes.button}
-                                variant="contained"
-                                color="secondary"
-                            >
-                                Disabled
-                            </Button>
-                        </Grid>
+                            Disabled
+                        </Button>
                     </Grid>
+
                     <Grid item xs={12} sm={12} >
                         <Typography variant="h5">{title}</Typography>
                         <Typography variant="body1" gutterBottom>
@@ -79,8 +74,12 @@ export const DescriptionGuest = ({ data }) => {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container xs={12} sm={12}>
-                    <Grid xs={12} sm={3}>
+                <Grid container>
+                    <Grid
+                        Grid item
+                        xs={12}
+                        sm={3}
+                    >
                         <Typography variant="h4">Info</Typography>
                         <Typography variant="body1" gutterBottom>
                             Episodes:{episodes}
@@ -105,7 +104,11 @@ export const DescriptionGuest = ({ data }) => {
                             Score: {score}
                         </Typography>
                     </Grid>
-                    <Grid container xs={12} sm={8}>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={8}
+                    >
                         <Typography variant="h4">Main Characters</Typography>
                         <Grid container>
                             {!isEmpty(characters.list) &&
@@ -127,11 +130,11 @@ export const DescriptionGuest = ({ data }) => {
                             style={{ flexDirection: "column", justifyContent: "center" }}
                         >
                             <Typography variant="h4">Trailer</Typography>
-
-                            <iframe width="320" height="230" title={title} src={trailer_url}></iframe>
+                            <iframe width="320" height="230" title={title} src={trailer_url && trailer_url}></iframe>
                         </Grid>
                     </Grid>
                 </Grid>
+
             </Container>
         </div>
     )

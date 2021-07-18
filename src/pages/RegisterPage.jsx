@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { auth } from "../firebase";
 import { FormHelperText } from "@material-ui/core";
@@ -53,6 +53,7 @@ export const RegisterPage = () => {
   const strongRegex = new RegExp(
     "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
   );
+  const user = useSelector(state => state.user)
   useEffect(() => {
     dispatch(errorMessageRefresh());
   }, [])
@@ -62,16 +63,15 @@ export const RegisterPage = () => {
     if (strongRegex.test(password) && password === confirmPass) {
       auth
         .createUserWithEmailAndPassword(email, password)
-        .then((userCredetial) => {
+        .then(() => {
           setSuccess(true);
         })
         .then(() => {
           auth
             .signOut()
             .then(dispatch(setUserLogOutState()))
-            .catch((err) => {
-              console.log(err);
-              setMessageError(err.message);
+            .catch((error) => {
+              setMessageError(error.message);
             });
         })
         .catch((error) => {
@@ -95,13 +95,12 @@ export const RegisterPage = () => {
       );
     }
   };
-  //  HOOK STATE INPUT VALUE SU ONVCHANGE
-
+  // event onChange and submit
   const onChangePass = (e) => setPassword(e.target.value);
   const onChangeEmail = (e) => setEmail(e.target.value);
   const handleConfirmPass = (e) => setConfirmPass(e.target.value);
 
-  if (!success) {
+  if (!success && !user.id) {
     return (
       <Container className={classes.container} component="main" maxWidth="xs">
         <CssBaseline />
@@ -180,7 +179,10 @@ export const RegisterPage = () => {
         </div>
       </Container>
     );
-  } else {
+  } else if (user.id) {
+    return <Redirect to="/" />
+  }
+  else {
     return <Redirect to="/login" />;
   }
 };

@@ -46,6 +46,7 @@ export const HomePage = () => {
   const authUser = window.sessionStorage;
   const classes = useStyles();
   const search = useSelector((state) => state.search);
+  const user = useSelector(state => state.user)
 
   return (
     <div>
@@ -67,12 +68,12 @@ export const HomePage = () => {
               color="textSecondary"
               paragraph
             >
-              {!isEmpty(authUser)
+              {user.id
                 ? "Save anime in your favorites list"
                 : "Search an anime, sign in and save it to your favorites list"}
             </Typography>
 
-            {!isEmpty(authUser) ? null : (
+            {user.id ? null : (
               <div className={classes.heroButtons}>
                 <Grid container spacing={2} justifyContent="center">
                   <Grid item>

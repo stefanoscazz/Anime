@@ -76,8 +76,8 @@ export const LoginPage = () => {
       })
     );
   };
-  console.log(auth.currentUser)
-  if (!auth.currentUser) {
+
+  if (!user.id) {
     return (
       <Container className={classes.container} component="main" maxWidth="xs">
         <CssBaseline />

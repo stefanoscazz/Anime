@@ -12,7 +12,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import db, { auth } from "../firebase";
-import { addFavoritesAction, removeFromList } from "../slice/favoritesSlice";
+import { removeFromList } from "../slice/favoritesSlice";
 
 
 
@@ -60,7 +60,7 @@ export const FavoritesPage = () => {
   const user = useSelector((state) => state.user);
 
   if (
-    auth.currentUser &&
+    user.id &&
     !isEmpty(favorites.list) &&
     favorites.status === "success"
   ) {
@@ -69,7 +69,11 @@ export const FavoritesPage = () => {
         <Typography variant="h3">Favorites</Typography>
         {favorites.list.map((el) => {
           return (
-            <Grid className={classes.grid} xs={12} sm={6}>
+            <Grid item className={classes.grid}
+              xs={12}
+              sm={6}
+              key={el.id}
+            >
               <Card className={classes.root}>
                 <div className={classes.details}>
                   <CardContent className={classes.content}>
@@ -113,12 +117,13 @@ export const FavoritesPage = () => {
               </Card>
             </Grid>
           );
-        })}
-      </Container>
+        })
+        }
+      </Container >
     );
   }
   if (
-    auth.currentUser &&
+    user.id &&
     isEmpty(favorites.list)
   ) {
     return (

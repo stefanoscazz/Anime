@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import HomeIcon from "@material-ui/icons/Home";
 import { useState } from "react";
 import { searchAction } from "../slice/searchSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../firebase";
 import { setUserLogOutState } from "../slice/userSlice";
 import {
@@ -14,7 +14,7 @@ import {
   ListItemText, IconButton,
   Typography
 } from "@material-ui/core";
-import { logOutAction } from "../slice/favoritesSlice";
+import { logOutActionFavorites } from "../slice/favoritesSlice";
 import { alpha, makeStyles, withStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import StarIcon from "@material-ui/icons/Star";
@@ -120,8 +120,8 @@ export const Navbar = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [inputValue, setInputValue] = useState("");
-  const isLog = auth.currentUser;
   const [anchorEl, setAnchorEl] = useState(null);
+  const user = useSelector(state => state.user)
 
 
   const handleClick = (event) => {
@@ -136,14 +136,14 @@ export const Navbar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (inputValue) {
-      dispatch(searchAction(inputValue));
-    }
+    dispatch(searchAction(inputValue));
+
   };
 
 
   const handleOnChange = (e) => {
     setInputValue(e.target.value);
+    dispatch(searchAction(inputValue));
   };
 
 
@@ -153,7 +153,7 @@ export const Navbar = () => {
       .signOut()
       .then(() => {
         dispatch(setUserLogOutState());
-        dispatch(logOutAction());
+        dispatch(logOutActionFavorites());
       })
       .catch((err) => alert(err.message));
   };
@@ -208,7 +208,7 @@ export const Navbar = () => {
                 <ListItemText primary="Favorites" />
               </StyledMenuItem>
             </Link>
-            {!isLog ? (
+            {!user.id ? (
               <Link
                 to="/login"
                 style={{

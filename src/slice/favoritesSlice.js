@@ -23,7 +23,7 @@ const favoritesSlice = createSlice({
         errorMessage: null
     },
     reducers: {
-        logOutAction: (state, action) => {
+        logOutActionFavorites: (state, action) => {
             state.list = null;
             state.status = null;
         },
@@ -51,4 +51,4 @@ const favoritesSlice = createSlice({
 
 
 export default favoritesSlice.reducer;
-export const { logOutAction, removeFromList } = favoritesSlice.actions
+export const { logOutActionFavorites, removeFromList } = favoritesSlice.actions

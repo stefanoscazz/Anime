@@ -14,6 +14,7 @@ import {
     REGISTER,
 } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
+import storageSession from "redux-persist/lib/storage/session";
 
 
 const rootReducer = combineReducers({
@@ -28,7 +29,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: 'root',
     version: 1,
-    storage,
+    storage: storageSession,
     blacklist: ['top', 'search']
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
