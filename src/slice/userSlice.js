@@ -73,6 +73,7 @@ const userSlice = createSlice({
             state.photoURL = null;
             state.email = null;
             state.errorMessage = null;
+            state.status = null;
             sessionStorage.clear()
         },
         errorMessageRefresh: state => {

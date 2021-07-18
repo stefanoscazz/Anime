@@ -96,11 +96,7 @@ export const FavoritesPage = () => {
                           .collection("preferiti")
                           .doc(el.title)
                           .delete()
-                          .then(() => {
-                            dispatch(removeFromList(el.id))
-                            dispatch(addFavoritesAction(user.id))
-                          }
-                          );
+                        dispatch(removeFromList(el.title))
                       }}
                       variant="contained"
                       color="secondary"
@@ -135,7 +131,7 @@ export const FavoritesPage = () => {
     );
     //
   }
-  if (!auth.currentUser) {
+  if (!user.id) {
     return (
       <Container className={classes.container} maxWidth="lg">
         <Typography variant="h3">You're not logged in</Typography>

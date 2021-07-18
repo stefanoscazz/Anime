@@ -27,8 +27,9 @@ const favoritesSlice = createSlice({
             state.list = null;
             state.status = null;
         },
-        removeFromList: (state, { id_anime }) => {
-            state.list = state.list.filter(el => el.id === id_anime)
+        removeFromList: (state, { payload }) => {
+
+            state.list = state.list.filter(el => el.title !== payload)
         }
     },
     extraReducers: {
