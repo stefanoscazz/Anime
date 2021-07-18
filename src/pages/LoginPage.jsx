@@ -7,9 +7,9 @@ import {
   TextField,
 } from "@material-ui/core";
 import {
+  errorMessageRefresh,
   loginGoogleAction,
   loginWithEmailPasswordAction,
-  setUserLogOutState,
 } from "../slice/userSlice";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -53,7 +53,9 @@ export const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
-
+  useEffect(() => {
+    dispatch(errorMessageRefresh());
+  }, [])
   const onChangePass = (e) => {
     setPassword(e.target.value);
   };

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { auth, provider } from "../firebase";
 import firebase from "firebase/app";
+import { isNull } from "lodash";
 
 
 export const loginWithEmailPasswordAction = createAsyncThunk("userSlice/loginWithEmailPasswordAction",
@@ -54,7 +55,8 @@ const userSlice = createSlice({
         userName: null,
         email: null,
         photoURL: null,
-        errorMessage: null
+        errorMessage: null,
+        status: null
     },
     reducers: {
         setActiveUser: (state, action) => {
@@ -72,6 +74,10 @@ const userSlice = createSlice({
             state.email = null;
             state.errorMessage = null;
             sessionStorage.clear()
+        },
+        errorMessageRefresh: state => {
+            state.errorMessage = null;
+            state.status = null;
         }
     },
     extraReducers: {
@@ -109,5 +115,5 @@ const userSlice = createSlice({
     }
 })
 
-export const { setActiveUser, setUserLogOutState, setFavoritesList } = userSlice.actions;
+export const { setActiveUser, setUserLogOutState, setFavoritesList, errorMessageRefresh } = userSlice.actions;
 export default userSlice.reducer;

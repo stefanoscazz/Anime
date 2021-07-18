@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { auth } from "../firebase";
 import { FormHelperText } from "@material-ui/core";
-import { setUserLogOutState } from "../slice/userSlice";
+import { errorMessageRefresh, setUserLogOutState } from "../slice/userSlice";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,6 +14,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,6 +53,9 @@ export const RegisterPage = () => {
   const strongRegex = new RegExp(
     "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
   );
+  useEffect(() => {
+    dispatch(errorMessageRefresh());
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();

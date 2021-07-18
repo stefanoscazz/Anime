@@ -12,7 +12,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import db, { auth } from "../firebase";
-import { removeFromList } from "../slice/favoritesSlice";
+import { addFavoritesAction, removeFromList } from "../slice/favoritesSlice";
 
 
 
@@ -96,7 +96,11 @@ export const FavoritesPage = () => {
                           .collection("preferiti")
                           .doc(el.title)
                           .delete()
-                          .then(() => dispatch(removeFromList(el.id)));
+                          .then(() => {
+                            dispatch(removeFromList(el.id))
+                            dispatch(addFavoritesAction(user.id))
+                          }
+                          );
                       }}
                       variant="contained"
                       color="secondary"
@@ -119,8 +123,7 @@ export const FavoritesPage = () => {
   }
   if (
     auth.currentUser &&
-    isEmpty(favorites.list) &&
-    favorites.status === "success"
+    isEmpty(favorites.list)
   ) {
     return (
       <Container className={classes.container} maxWidth="lg">
@@ -132,7 +135,7 @@ export const FavoritesPage = () => {
     );
     //
   }
-  if (auth.currentUser) {
+  if (!auth.currentUser) {
     return (
       <Container className={classes.container} maxWidth="lg">
         <Typography variant="h3">You're not logged in</Typography>
