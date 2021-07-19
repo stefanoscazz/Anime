@@ -143,7 +143,6 @@ export const Navbar = () => {
 
   const handleOnChange = (e) => {
     setInputValue(e.target.value);
-    dispatch(searchAction(inputValue));
   };
 
 
