@@ -56,7 +56,7 @@ export const RegisterPage = () => {
   const user = useSelector(state => state.user)
   useEffect(() => {
     dispatch(errorMessageRefresh());
-  }, [])
+  }, [dispatch])
 
   const handleSubmit = (e) => {
     e.preventDefault();

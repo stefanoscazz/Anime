@@ -51,11 +51,6 @@ export const DescriptionLogged = ({ data }) => {
   const characters = useSelector((state) => state.characters);
   const [displayButton, setdisplayButton] = useState(false);
   const dispatch = useDispatch();
-  useEffect(() => {
-    checkCurrentAnime()
-  }, [favorites.list])
-
-
   useHistory().listen(() => {
     window.scrollTo(0, 0);
   })
@@ -71,7 +66,9 @@ export const DescriptionLogged = ({ data }) => {
       setdisplayButton(false);
     }
   };
-
+  useEffect(() => {
+    checkCurrentAnime()
+  }, [favorites.list])
 
 
   const handleRemove = () => {

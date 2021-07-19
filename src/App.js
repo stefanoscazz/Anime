@@ -31,7 +31,7 @@ function App() {
   useEffect(() => {
     dispatch(topAnimeAction())
     dispatch(addFavoritesAction(user.id))
-  }, [dispatch])
+  }, [dispatch, user.id])
 
   return (
 

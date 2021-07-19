@@ -76,7 +76,7 @@ export const DescriptionGuest = ({ data }) => {
                 </Grid>
                 <Grid container>
                     <Grid
-                        Grid item
+                        item
                         xs={12}
                         sm={3}
                     >
@@ -129,8 +129,9 @@ export const DescriptionGuest = ({ data }) => {
                             container
                             style={{ flexDirection: "column", justifyContent: "center" }}
                         >
+
                             <Typography variant="h4">Trailer</Typography>
-                            <iframe width="320" height="230" title={title} src={trailer_url && trailer_url}></iframe>
+                            <iframe width="320" height="230" title={title} src={trailer_url && trailer_url.slice(0, -11).replace("youtube", "youtube-nocookie")}></iframe>
                         </Grid>
                     </Grid>
                 </Grid>

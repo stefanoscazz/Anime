@@ -6,7 +6,6 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import { isEmpty } from "lodash";
 import TopAnime from "../components/TopAnime";
 import SearchAnime from "../components/SearchAnime";
 
@@ -43,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export const HomePage = () => {
-  const authUser = window.sessionStorage;
   const classes = useStyles();
   const search = useSelector((state) => state.search);
   const user = useSelector(state => state.user)
