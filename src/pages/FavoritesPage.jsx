@@ -110,7 +110,7 @@ export const FavoritesPage = () => {
                   </div>
                 </div>
                 <img
-                  style={{ height: "250px", width: "290px" }}
+                  style={{ height: "250px", width: "200px" }}
                   src={el.img_url}
                   alt=""
                 />
