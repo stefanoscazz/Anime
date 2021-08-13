@@ -78,6 +78,12 @@ const userSlice = createSlice({
         errorMessageRefresh: state => {
             state.errorMessage = null;
             state.status = null;
+        },
+        imgUrl: (state, action) => {
+            state.photoURL = action.payload
+        },
+        changeUsername: (state, action) => {
+            state.userName = action.payload
         }
     },
     extraReducers: {
@@ -115,5 +121,6 @@ const userSlice = createSlice({
     }
 })
 
-export const { setActiveUser, setUserLogOutState, setFavoritesList, errorMessageRefresh } = userSlice.actions;
+
+export const { setActiveUser, setUserLogOutState, setFavoritesList, errorMessageRefresh, imgUrl, changeUsername } = userSlice.actions;
 export default userSlice.reducer;

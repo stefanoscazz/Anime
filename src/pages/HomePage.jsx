@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   heroContent: {
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(8, 0, 6),
+
   },
   heroButtons: {
     marginTop: theme.spacing(4),
@@ -40,6 +41,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  content: {
+    minHeight: "calc(100vh - 150px)",
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column"
+
+  }
 }));
 export const HomePage = () => {
   const classes = useStyles();
@@ -48,7 +56,7 @@ export const HomePage = () => {
 
   return (
     <div>
-      <div>
+      <div className={classes.content} >
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography

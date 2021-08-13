@@ -35,7 +35,11 @@ const TopAnime = () => {
         )
     }
     if (top.status === "failed") {
-        return <h1> No connection, please connect and try again</h1>;
+        return (
+
+            <h1> No connection, please connect and try again</h1>
+
+        )
     }
     if (top.status === "success") {
         return <CardAnime data={top.list} />;

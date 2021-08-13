@@ -12,6 +12,7 @@ import { addFavoritesAction } from "./slice/favoritesSlice";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 import { useEffect } from "react";
 import { topAnimeAction } from "./slice/topAnimeSlice";
+import { ProfilePage } from "./pages/ProfilePage";
 
 
 
@@ -45,6 +46,7 @@ function App() {
             <Route exact path="/register" component={RegisterPage} />
             <Route exact path="/description/:id" component={DescriptionPage} />
             <Route exact path="/favorites" component={FavoritesPage} />
+            <Route exact path="/profile" component={ProfilePage} />
           </Switch>
         </div>
         <Footer />
