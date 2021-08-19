@@ -9,6 +9,9 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import SettingsIcon from '@material-ui/icons/Settings';
+import { Favorites } from '../components/Favorites'
+import { Redirect } from 'react-router-dom'
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -115,63 +118,68 @@ export const ProfilePage = () => {
             auth.currentUser.updateProfile({
                 displayName: userName,
             })
+            setuserName("")
 
         }
     }
 
     return (
-        <div className={classes.profilePage} >
-            <Grid container className={classes.headProfile}>
-                {user.photoURL && <img style={{ height: "60px", width: "60px", borderRadius: "60px", margin: "10px" }} src={user.photoURL} alt="" />}
-                {user.userName && <h2>{user.userName.toUpperCase()}</h2>}
-            </Grid>
-            <Grid className={classes.gridNavigation} container style={{}} >
-                <BottomNavigation value={value} onChange={handleChangeNavigation} className={classes.root}>
-                    <BottomNavigationAction onClick={handleClickSetting} showLabel={true}
-                        label="Settings" value="settings" icon={<SettingsIcon style={{ fontSize: "50px" }} />} />
-                    <BottomNavigationAction onClick={handleClickFavorites} showLabel={true}
-                        label="Favorites" value="favorites" icon={<FavoriteIcon style={{ fontSize: "50px" }} />} />
-                </BottomNavigation>
+        <div>
+            {user.id ? (
+                <div className={classes.profilePage} >
+                    <Grid container className={classes.headProfile}>
+                        {user.photoURL && <img style={{ height: "60px", width: "60px", borderRadius: "60px", margin: "10px" }} src={user.photoURL} alt="" />}
+                        {user.userName && <h2>{user.userName.toUpperCase()}</h2>}
+                    </Grid>
+                    <Grid className={classes.gridNavigation} container style={{}} >
+                        <BottomNavigation value={value} onChange={handleChangeNavigation} className={classes.root}>
+                            <BottomNavigationAction onClick={handleClickSetting} showLabel={true}
+                                label="Settings" value="settings" icon={<SettingsIcon style={{ fontSize: "50px" }} />} />
+                            <BottomNavigationAction onClick={handleClickFavorites} showLabel={true}
+                                label="Favorites" value="favorites" icon={<FavoriteIcon style={{ fontSize: "50px" }} />} />
+                        </BottomNavigation>
 
-            </Grid>
-            <Container>
-                {
-                    value === "settings" ?
+                    </Grid>
+                    <Container>
+                        {
+                            value === "settings" ?
 
-                        <div className={classes.containerSetting}>
-                            <Grid container className={classes.gridContainer}>
-                                <div>
-                                    <Typography variant="h6" color="textPrimary">
-                                        Upload profile image :
-                                    </Typography>
+                                <div className={classes.containerSetting}>
+                                    <Grid container className={classes.gridContainer}>
+                                        <div>
+                                            <Typography variant="h6" color="textPrimary">
+                                                Upload profile image :
+                                            </Typography>
 
+                                        </div>
+                                        <div className={classes.uploadContainer}>
+                                            <input className={classes.inputUpload} lang="en" type="file" onChange={handleChange} />
+                                            <Button color="primary" size="small" variant="contained" onClick={handleUpload}>upload</Button>
+                                        </div>
+                                    </Grid>
+                                    <Grid container className={classes.gridContainer}>
+
+                                        <Typography variant="h6" color="textPrimary">
+                                            Change Username:
+                                        </Typography>
+
+                                        <div className={classes.uploadContainer}>
+
+                                            <TextField value={userName} onChange={hadleChangeName} id="outlined-basic" label="username" variant="outlined" size="small" />
+                                            <Button onClick={handleClickName} style={{ marginLeft: "5px" }} color="primary" size="small" variant="contained">change</Button>
+
+                                        </div>
+                                    </Grid>
                                 </div>
-                                <div className={classes.uploadContainer}>
-                                    <input className={classes.inputUpload} lang="en" type="file" onChange={handleChange} />
-                                    <Button color="primary" size="small" variant="contained" onClick={handleUpload}>upload</Button>
-                                </div>
-                            </Grid>
-                            <Grid container className={classes.gridContainer}>
+                                :
+                                <Favorites />
+                        }
+                    </Container>
 
-                                <Typography variant="h6" color="textPrimary">
-                                    Change Username:
-                                </Typography>
-
-                                <div className={classes.uploadContainer}>
-
-                                    <TextField onChange={hadleChangeName} id="outlined-basic" label="username" variant="outlined" size="small" />
-                                    <Button onClick={handleClickName} style={{ marginLeft: "5px" }} color="primary" size="small" variant="contained">change</Button>
-
-                                </div>
-                            </Grid>
-                        </div>
-                        :
-                        <div className={classes.containerFavorites}>
-
-                        </div>
-                }
-            </Container>
-
+                </div>)
+                :
+                <Redirect to="/login" />
+            }
         </div>
     )
 }

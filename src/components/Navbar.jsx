@@ -153,6 +153,7 @@ export const Navbar = () => {
       .then(() => {
         dispatch(setUserLogOutState());
         dispatch(logOutActionFavorites());
+        sessionStorage.clear()
       })
       .catch((err) => alert(err.message));
   };
@@ -193,7 +194,7 @@ export const Navbar = () => {
               </StyledMenuItem>
             </Link>
             <Link
-              to="/favorites"
+              to="/profile"
               style={{
                 color: "grey",
                 textDecoration: "none",
@@ -204,7 +205,7 @@ export const Navbar = () => {
                 <ListItemIcon>
                   <StarIcon fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary="Favorites" />
+                <ListItemText primary="Profile" />
               </StyledMenuItem>
             </Link>
             {!user.id ? (

@@ -88,6 +88,7 @@ export const DescriptionLogged = ({ data }) => {
       description: synopsis,
       img_url: image_url,
       id: id_anime,
+      comment: ""
     });
     dispatch(addFavoritesAction(user.id));
   };

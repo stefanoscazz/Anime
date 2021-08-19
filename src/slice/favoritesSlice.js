@@ -30,7 +30,12 @@ const favoritesSlice = createSlice({
         removeFromList: (state, { payload }) => {
 
             state.list = state.list.filter(el => el.title !== payload)
+        },
+        updateComment: (state, { payload }) => {
+            state.list.map((el) => el.title === payload.title ? el.comment = payload.comment : null)
+
         }
+
     },
     extraReducers: {
         [addFavoritesAction.pending]: (state, action) => {
@@ -51,4 +56,4 @@ const favoritesSlice = createSlice({
 
 
 export default favoritesSlice.reducer;
-export const { logOutActionFavorites, removeFromList } = favoritesSlice.actions
+export const { logOutActionFavorites, removeFromList, updateComment } = favoritesSlice.actions
