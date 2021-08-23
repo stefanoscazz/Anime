@@ -192,7 +192,10 @@ export const DescriptionLogged = ({ data }) => {
             >
               <Typography variant="h4">Trailer</Typography>
 
-              <iframe width="320" height="230" title={title} src={trailer_url && trailer_url.slice(0, -11)}></iframe>
+              {trailer_url ? <iframe width="320" height="230" title={title} src={trailer_url && trailer_url.slice(0, -11).replace("youtube", "youtube-nocookie")}></iframe>
+                :
+                <Typography variant="subtitle1">no trailers available
+                </Typography>}
             </Grid>
           </Grid>
         </Grid>

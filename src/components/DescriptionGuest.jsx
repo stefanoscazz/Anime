@@ -2,7 +2,8 @@ import { Button, Container, Grid, makeStyles, Typography } from "@material-ui/co
 import React from "react";
 import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
+
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -57,14 +58,18 @@ export const DescriptionGuest = ({ data }) => {
                     >
 
                         <img style={{ maxHeight: "350px" }} src={image_url} alt="" />
-                        <Button
-                            disabled
-                            className={classes.button}
-                            variant="contained"
-                            color="secondary"
-                        >
-                            Disabled
-                        </Button>
+                        <Link to="/login" style={{ textDecoration: "none" }}>
+
+                            <Button
+
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+
+                            >
+                                Login to save the Anime
+                            </Button>
+                        </Link>
                     </Grid>
 
                     <Grid item xs={12} sm={12} >
@@ -131,7 +136,10 @@ export const DescriptionGuest = ({ data }) => {
                         >
 
                             <Typography variant="h4">Trailer</Typography>
-                            <iframe width="320" height="230" title={title} src={trailer_url && trailer_url.slice(0, -11).replace("youtube", "youtube-nocookie")}></iframe>
+                            {trailer_url ? <iframe width="320" height="230" title={title} src={trailer_url && trailer_url.slice(0, -11).replace("youtube", "youtube-nocookie")}></iframe>
+                                :
+                                <Typography variant="subtitle1">no trailers available
+                                </Typography>}
                         </Grid>
                     </Grid>
                 </Grid>

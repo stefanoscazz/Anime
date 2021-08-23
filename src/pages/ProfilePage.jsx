@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
         display: "flex",
         flexDirection: "column",
 
+
     },
     gridNavigation: {
         alignItems: "center",
@@ -67,7 +68,6 @@ export const ProfilePage = () => {
     const [image, setimage] = useState(null)
     const [url, setUrl] = useState(null)
     const [userName, setuserName] = useState("")
-    const favorites = useSelector((state) => state.favorites);
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
     const handleChange = (e) => {
@@ -153,20 +153,20 @@ export const ProfilePage = () => {
 
                                         </div>
                                         <div className={classes.uploadContainer}>
-                                            <input className={classes.inputUpload} lang="en" type="file" onChange={handleChange} />
+                                            <input style={{ margin: "10px" }} className={classes.inputUpload} lang="en" type="file" onChange={handleChange} />
                                             <Button color="primary" size="small" variant="contained" onClick={handleUpload}>upload</Button>
                                         </div>
                                     </Grid>
                                     <Grid container className={classes.gridContainer}>
 
                                         <Typography variant="h6" color="textPrimary">
-                                            Change Username:
+                                            Change or Add Username:
                                         </Typography>
 
                                         <div className={classes.uploadContainer}>
 
                                             <TextField value={userName} onChange={hadleChangeName} id="outlined-basic" label="username" variant="outlined" size="small" />
-                                            <Button onClick={handleClickName} style={{ marginLeft: "5px" }} color="primary" size="small" variant="contained">change</Button>
+                                            <Button onClick={handleClickName} style={{ margin: "10px" }} color="primary" size="small" variant="contained">change</Button>
 
                                         </div>
                                     </Grid>

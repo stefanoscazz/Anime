@@ -149,6 +149,6 @@ export const LoginPage = () => {
       </Container>
     );
   } else {
-    return <Redirect to="/profile" />;
+    return <Redirect to="/" />;
   }
 };
