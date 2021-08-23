@@ -7,7 +7,6 @@ import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { DescriptionPage } from "./pages/DescriptionPage";
-import { FavoritesPage } from "./pages/FavoritesPage";
 import { addFavoritesAction } from "./slice/favoritesSlice";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 import { useEffect } from "react";
@@ -45,7 +44,6 @@ function App() {
             <Route exact path="/login" component={LoginPage} />
             <Route exact path="/register" component={RegisterPage} />
             <Route exact path="/description/:id" component={DescriptionPage} />
-            <Route exact path="/favorites" component={FavoritesPage} />
             <Route exact path="/profile" component={ProfilePage} />
           </Switch>
         </div>
